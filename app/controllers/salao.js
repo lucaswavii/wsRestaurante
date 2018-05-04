@@ -1,15 +1,16 @@
 module.exports.index = function( application, req, res ){
+
+    var connection = application.config.dbConnection();
+    var MesaDao = new application.app.models.MesaDAO(connection);
+    var caixaDao = new application.app.models.CaixaDAO(connection);
+    var pdvDao = new application.app.models.PdvDAO(connection);
+    var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
+
     
     this._meuIp = require('ip');        
     var ip = this._meuIp.address();
     
-    var connection = application.config.dbConnection();
-    var caixaDao = new application.app.models.CaixaDAO(connection);
-    var pdvDao = new application.app.models.PdvDAO(connection);
-    var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
-    
     caixaDao.listar(function(error, caixas ){
-        
         if( error ) {
             
             res.render('pdv', { validacao : {}, caixa: rta, caixa: {}, pdvs : {}, funcionarios:{}, sessao: {} });
@@ -25,21 +26,21 @@ module.exports.index = function( application, req, res ){
             connection.end();
             res.render('pdv', { validacao : [{'msg': 'O caixa não pode ser aberto! Configure o caixa com o ip ' + ip + '.'}], caixa: rta,  caixa: {}, pdvs : {}, funcionarios:{}, sessao: {} });
         } else {
-            
-            funcionarioDao.listar(function(error, funcionarios ){
-                pdvDao.listar(rta, function(error, pdvs ){
-                    if( error ) {
+            MesaDao.listar(function(error, mesas ){
+                funcionarioDao.listar(function(error, funcionarios ){
+                    pdvDao.listar(rta, function(error, pdvs ){
+                        if( error ) {
+                            
+                            res.render('pdv', { validacao : error, caixa: rta, caixas: caixas, pdvs : {}, funcionarios: funcionarios, sessao: {} });
+                            return;
+                        }
                         
-                        res.render('pdv', { validacao : error, caixa: rta, caixas: caixas, pdvs : {}, funcionarios: funcionarios, sessao: {} });
-                        return;
-                    }
-                    console.log(rta)
-                    connection.end();
-                    res.render('pdv', { validacao : {}, caixa: rta, caixas: caixas, pdvs : pdvs, funcionarios: funcionarios, sessao: {} });
+                        connection.end();
+                        res.render('salao', { validacao : {}, mesas: mesas, caixa: rta, caixas: caixas, pdvs : pdvs, funcionarios: funcionarios, sessao: {} });
+                    });
                 });
             });
         }
-         
     });
 }
 

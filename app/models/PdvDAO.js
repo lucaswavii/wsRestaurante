@@ -2,8 +2,8 @@ function PdvDAO( connection ){
 	this._connection = connection; 
 }
 
-PdvDAO.prototype.listar = function( caixa, callback) {
-	this._connection.query('select * from pdv where caixa = ? and data = now() order by id', caixa.id, callback);	
+PdvDAO.prototype.listar = function( pdv, callback) {
+	this._connection.query('select * from pdv where caixa = ? and data = CURDATE()  order by id', pdv.id, callback);	
 }
 
 PdvDAO.prototype.aberturaPdv = function( pdv, callback) {

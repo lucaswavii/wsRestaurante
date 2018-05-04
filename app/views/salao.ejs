@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include /templates/head %>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <% include /templates/header %>
+        
+        <!-- =============================================== -->
+        <% include /templates/siderbar %>
+        
+        <!-- =============================================== -->
+
+        <!-- Content Wrapper. Contains page content -->
+        
+        <div class="content-wrapper">
+            <!-- escrever conteúdo do sistema -->
+            <!-- escrever conteúdo do sistema -->
+            <section class="content-header">
+                <h1>
+                    PDV
+                    <small>MÓDULO DE VENDAS</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> Pdv</a>
+                    </li>
+                    <li class="active">Salão</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <% for(var i = 0; i < validacao.length; i++) {%>
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <a href="#" class="alert-link">Erro:</a>.<%= validacao[i].msg %>
+                    </div>
+                <% } %>
+               
+                <!-- Default box -->
+                <div class="box box-success box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            SALÃO DE VENDAS PDV v2.1
+                        </h3>
+                    
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>                                
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="box-body no-padding">
+                                    <ul class="nav nav-pills nav-stacked">
+                                        <li class="active"><a href="#"><i class="fa fa-inbox"></i> MESAS
+                                            <span class="label label-primary pull-right">11</span></a></li>
+                                        <li><a href="#"><i class="fa fa-envelope-o"></i> ABERTAS
+                                            <span class="label label-success pull-right">0</span>
+                                        </a></li>
+                                        
+                                        <li><a href="#"><i class="fa fa-file-text-o"></i> ATENDIMENTO
+                                            <span class="label label-danger pull-right">0</span>
+                                        </a></li>
+                                        <li><a href="#"><i class="fa fa-filter"></i> FINALIZADAS <span class="label label-warning pull-right">0</span></a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="tab-pane active" id="glyphicons">
+                                    <ul class="bs-glyphicons">
+                                    <% for( var i = 0; i < mesas.length; i++ ) { %>
+                                        <li>
+                                            <span class="glyphicon glyphicon glyphicon-cutlery"></span>
+                                            <span class="glyphicon-class"><p class="text-red"><b><%= mesas[i].nome %></b></p></span>
+                                            <button type="button" class="btn btn-block btn-success"></button>
+                                        </li>
+                                
+                                    <% } %>
+                                    </ul>
+                                </div>
+                            </div>
+                    </div>
+                
+                </div>
+
+            </section>            
+        </div>
+
+        <!-- /.content-wrapper -->
+        <% include /templates/footer %>        
+        
+        <% include /templates/config %>        
+
+        <div class="control-sidebar-bg"></div>
+    </div>
+</body>
+<% include /templates/scripts %>
+</html>

@@ -6,4 +6,8 @@ module.exports = function(application){
     application.get('/index', function(req, res){		
         res.render('index');
     });
+
+    application.get('/empresa', function(req, res){
+        application.app.controllers.empresa.index(application, req, res);
+    });
 }  

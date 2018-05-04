@@ -1,0 +1,102 @@
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>WSRESTAURANTE</title>
+<!-- Tell the browser to be responsive to screen width -->
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+<!-- Bootstrap 3.3.7 -->
+<link rel="stylesheet" href="../../bower_components/bootstrap/dist/css/bootstrap.min.css">
+<!-- Font Awesome -->
+<link rel="stylesheet" href="../../bower_components/font-awesome/css/font-awesome.min.css">
+<!-- Ionicons -->
+<link rel="stylesheet" href="../../bower_components/Ionicons/css/ionicons.min.css">
+<!-- Theme style -->
+<link rel="stylesheet" href="../../dist/css/AdminLTE.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+<!-- Pace style -->
+<link rel="stylesheet" href="../../plugins/pace/pace.min.css">
+<!-- DataTables -->
+<link rel="stylesheet" href="../../bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css">
+<!-- AdminLTE Skins. Choose a skin from the css/skins
+     folder instead of downloading all of them to reduce the load. -->
+<link rel="stylesheet" href="../../dist/css/skins/_all-skins.min.css">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+
+<!-- Google Font -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+<!-- Adicionando Javascript -->
+<script type="text/javascript">
+
+  $(document).ready(function () {
+
+      function limpa_formulário_cep() {
+          // Limpa valores do formulário de cep.
+          $("#endereco").val("");
+          $("#bairro").val("");
+          $("#cidade").val("");
+          $("#uf").val("");
+          $("#ibge").val("");
+      }
+
+      //Quando o campo cep perde o foco.
+      $("#cep").blur(function () {
+
+          //Nova variável "cep" somente com dígitos.
+          var cep = $(this).val().replace(/\D/g, '');
+
+          //Verifica se campo cep possui valor informado.
+          if (cep != "") {
+
+              //Expressão regular para validar o CEP.
+              var validacep = /^[0-9]{8}$/;
+
+              //Valida o formato do CEP.
+              if (validacep.test(cep)) {
+
+                  //Preenche os campos com "..." enquanto consulta webservice.
+                  $("#endereco").val("...");
+                  $("#bairro").val("...");
+                  $("#cidade").val("...");
+                  $("#uf").val("...");
+                  $("#ibge").val("...");
+
+                  //Consulta o webservice viacep.com.br/
+                  $.getJSON("https://viacep.com.br/ws/" + cep + "/json/?callback=?", function (dados) {
+
+                      if (!("erro" in dados)) {
+                          //Atualiza os campos com os valores da consulta.
+                          $("#endereco").val(dados.logradouro);
+                          $("#bairro").val(dados.bairro);
+                          $("#cidade").val(dados.localidade);
+                          $("#uf").val(dados.uf);
+                          $('select[name="uf"]').val(dados.uf);
+                          $("#ibge").val(dados.ibge);
+                      } //end if.
+                      else {
+                          //CEP pesquisado não foi encontrado.
+                          limpa_formulário_cep();
+                          alert("CEP não encontrado.");
+                      }
+                  });
+              } //end if.
+              else {
+                  //cep é inválido.
+                  limpa_formulário_cep();
+                  alert("Formato de CEP inválido.");
+              }
+          } //end if.
+          else {
+              //cep sem valor, limpa formulário.
+              limpa_formulário_cep();
+          }
+      });
+  });
+
+</script>

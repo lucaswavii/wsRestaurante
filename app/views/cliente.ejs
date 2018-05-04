@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include /templates/head %>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <% include /templates/header %>
+
+            <!-- =============================================== -->
+            <% include /templates/siderbar %>
+
+                <!-- =============================================== -->
+
+                <!-- Content Wrapper. Contains page content -->
+
+                <div class="content-wrapper">
+                    <!-- escrever conteúdo do sistema -->
+                    <section class="content-header">
+                        <h1>
+                            CLIENTE
+                            <small>LISTAGEM DE CLIENTES</small>
+                        </h1>
+                        <ol class="breadcrumb">
+                            <li>
+                                <a href="#">
+                                    <i class="fa fa-dashboard"></i> Dashboard</a>
+                            </li>
+                            <li class="active">Cliente</li>
+                        </ol>
+                    </section>
+                    <!-- Main content -->
+                    <section class="content">
+
+                        <!-- Default box -->
+                        <div class="box">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">
+                                    MANTER CLIENTE
+                                </h3>
+                            
+                                <div class="box-tools pull-right">
+                                    <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>                                
+                            </div>
+                            <div class="modal fade" id="modal-default">
+                                <div class="modal-dialog">
+                                    <form role="form" action="/clienteSalvar" method="post">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">NOVO REGISTRO</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="nav-tabs-custom">
+                                                    <!-- Tabs within a box -->
+                                                    <ul class="nav nav-tabs pull-right">
+                                                        <li>
+                                                            <a href="#revenue-chart" data-toggle="tab">Endereço</a>
+                                                        </li>
+                                                        <li class="active">
+                                                            <a href="#sales-chart" data-toggle="tab">Principal</a>
+                                                        </li>
+                                                        <li class="pull-left header">
+                                                            <i class="fa fa-inbox"></i> Cliente</li>
+                                                    </ul>
+                                                    <div class="tab-content no-padding">
+
+                                                        <!-- Morris chart - Sales -->
+                                                        <div class="chart tab-pane" id="revenue-chart" style="position: relative; height: 300px;">
+                                                            <div class="form-group col-lg-3">
+                                                                <label>Cep:</label>
+                                                                <input type="text" class="form-control" name="cep" id="cep" placeholder="" value="">
+                                                            </div>
+                                                            <div class="row"></div>
+                                                            <div class="form-group col-lg-8">
+                                                                <label>Endereço:</label>
+                                                                <input type="text" class="form-control" name="endereco" id="endereco" placeholder="" value="">
+                                                            </div>
+
+                                                            <div class="form-group col-lg-4">
+                                                                <label>Número:</label>
+                                                                <input type="text" class="form-control" name="numero" id="numero" placeholder="" value="">
+                                                            </div>
+                                                            <div class="row"></div>
+                                                            <div class="form-group col-lg-12">
+                                                                <label>Complemento:</label>
+                                                                <input type="text" class="form-control" name="complemento" id="complemento" placeholder="" value="">
+                                                            </div>
+                                                            <div class="row"></div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label>Uf</label>
+                                                                <select class="form-control" name="uf">
+                                                                    <option value="">Selecione</option>
+                                                                    <option value="AC" <%=( clientes.length==1 && clientes[0].UF=="AC" ? "selected" : "" ) %>>AC</option>
+                                                                    <option value="AL" <%=( clientes.length==1 && clientes[0].UF=="AL" ? "selected" : "" ) %>>AL</option>
+                                                                    <option value="AP" <%=( clientes.length==1 && clientes[0].UF=="AP" ? "selected" : "" ) %>>AP</option>
+                                                                    <option value="AM" <%=( clientes.length==1 && clientes[0].UF=="AM" ? "selected" : "" ) %>>AM</option>
+                                                                    <option value="BA" <%=( clientes.length==1 && clientes[0].UF=="BA" ? "selected" : "" ) %>>BA</option>
+                                                                    <option value="CE" <%=( clientes.length==1 && clientes[0].UF=="CE" ? "selected" : "" ) %>>CE</option>
+                                                                    <option value="DF" <%=( clientes.length==1 && clientes[0].UF=="DF" ? "selected" : "" ) %>>DF</option>
+                                                                    <option value="GO" <%=( clientes.length==1 && clientes[0].UF=="GO" ? "selected" : "" ) %>>GO</option>
+                                                                    <option value="MA" <%=( clientes.length==1 && clientes[0].UF=="MA" ? "selected" : "" ) %>>MA</option>
+                                                                    <option value="MT" <%=( clientes.length==1 && clientes[0].UF=="MT" ? "selected" : "" ) %>>MT</option>
+                                                                    <option value="MS" <%=( clientes.length==1 && clientes[0].UF=="MS" ? "selected" : "" ) %>>MS</option>
+                                                                    <option value="MG" <%=( clientes.length==1 && clientes[0].UF=="MG" ? "selected" : "" ) %>>MG</option>
+                                                                    <option value="PA" <%=( clientes.length==1 && clientes[0].UF=="PA" ? "selected" : "" ) %>>PA</option>
+                                                                    <option value="PB" <%=( clientes.length==1 && clientes[0].UF=="PB" ? "selected" : "" ) %>>PB</option>
+                                                                    <option value="PR" <%=( clientes.length==1 && clientes[0].UF=="PR" ? "selected" : "" ) %>>PR</option>
+                                                                    <option value="PE" <%=( clientes.length==1 && clientes[0].UF=="PE" ? "selected" : "" ) %>>PE</option>
+                                                                    <option value="PI" <%=( clientes.length==1 && clientes[0].UF=="PI" ? "selected" : "" ) %>>PI</option>
+                                                                    <option value="RJ" <%=( clientes.length==1 && clientes[0].UF=="RJ" ? "selected" : "" ) %>>RJ</option>
+                                                                    <option value="RN" <%=( clientes.length==1 && clientes[0].UF=="RN" ? "selected" : "" ) %>>RN</option>
+                                                                    <option value="RS" <%=( clientes.length==1 && clientes[0].UF=="RS" ? "selected" : "" ) %>>RS</option>
+                                                                    <option value="RO" <%=( clientes.length==1 && clientes[0].UF=="RO" ? "selected" : "" ) %>>RO</option>
+                                                                    <option value="SC" <%=( clientes.length==1 && clientes[0].UF=="SC" ? "selected" : "" ) %>>SC</option>
+                                                                    <option value="SP" <%=( clientes.length==1 && clientes[0].UF=="SP" ? "selected" : "" ) %>>SP</option>
+                                                                    <option value="SE" <%=( clientes.length==1 && clientes[0].UF=="SE" ? "selected" : "" ) %>>SE</option>
+                                                                    <option value="TO" <%=( clientes.length==1 && clientes[0].UF=="TO" ? "selected" : "" ) %>>TO</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label>Cidade:</label>
+                                                                <input type="text" class="form-control" name="cidade" id="cidade" placeholder="" value="">
+                                                            </div>
+                                                            <div class="form-group col-lg-4">
+                                                                <label>Bairro:</label>
+                                                                <input type="text" class="form-control" name="bairro" id="bairro" placeholder="" value="">
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="chart tab-pane active" id="sales-chart" style="position: relative; height: 300px;">
+
+                                                            <div class="form-group col-lg-6">
+                                                                <label>cpf/cnpj *:</label>
+                                                                <input type="text" class="form-control" name="cgccpf" placeholder="" value="" required="true">
+                                                            </div>
+                                                            <div class="row"></div>
+
+                                                            <div class="form-group col-lg-12">
+                                                                <label>Nome *:</label>
+                                                                <input type="text" class="form-control" name="nome" placeholder="" value="" required="true">
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label>Fone:</label>
+                                                                <input type="text" class="form-control" name="fone" placeholder="" value="">
+                                                            </div>
+                                                            <div class="form-group col-lg-6">
+                                                                <label>E-mail:</label>
+                                                                <input type="text" class="form-control" name="email" placeholder="" value="">
+                                                            </div>
+                                                            <div class="checkbox">
+                                                                <label>
+                                                                    <input type="checkbox" name="consumidor"> Consumidor Final?
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                                                <button type="submit" class="btn btn-primary">Salvar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <!-- /.modal-content -->
+                                </div>
+                                <!-- /.modal-dialog -->
+                            </div>
+                            <!-- /.modal -->
+
+                            <div class="box-body">
+                                <table id="grddados" class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>cpf</th>
+                                            <th>Nome</th>
+                                            <th>Editar/Excluir</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for( var i = 0; i < clientes.length; i++) {%>
+                                        <tr>
+                                            <td><%= clientes[i].id %></td>
+                                            <td><%= clientes[i].cgccpf %></td>
+                                            <td><%= clientes[i].nome %></td>
+                                            <td>
+                                                <button type="button" class="btn btn-primary btn-flat" data-toggle="modal" data-target="#modal-edicao-<%= clientes[i].id %>"><i class="fa fa-random"></i></button>
+                                                <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-remove-<%= clientes[i].id %>"><i class="fa fa-remove"></i></button>
+                                            </td>
+                                             <div class="modal fade" id="modal-edicao-<%= clientes[i].id %>">
+                                                <div class="modal-dialog">
+                                                    <form role="form" action="/clienteSalvar" method="post">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                <h4 class="modal-title">EDIÇÃO REGISTRO</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="nav-tabs-custom">
+                                                                    <!-- Tabs within a box -->
+                                                                    <ul class="nav nav-tabs pull-right">
+                                                                        <li>
+                                                                            <a href="#revenue-chart-<%= clientes[i].id %>" data-toggle="tab">Endereço</a>
+                                                                        </li>
+                                                                        <li class="active">
+                                                                            <a href="#sales-chart-<%= clientes[i].id %>" data-toggle="tab">Principal</a>
+                                                                        </li>
+                                                                        <li class="pull-left header">
+                                                                            <i class="fa fa-inbox"></i> cliente</li>
+                                                                    </ul>
+                                                                    <div class="tab-content no-padding">
+
+                                                                        <!-- Morris chart - Sales -->
+                                                                        <div class="chart tab-pane" id="revenue-chart-<%= clientes[i].id %>" style="position: relative; height: 300px;">
+                                                                            <div class="form-group col-lg-3">
+                                                                                <label>Cep:</label>
+                                                                                <input type="text" class="form-control" name="cep" id="cep" placeholder="" value="<%= clientes[i].cep ? clientes[i].cep : '' %>">
+                                                                            </div>
+                                                                            <div class="row"></div>
+                                                                            <div class="form-group col-lg-8">
+                                                                                <label>Endereço:</label>
+                                                                                <input type="text" class="form-control" name="endereco" id="endereco" placeholder="" value="<%= clientes[i].cep ? clientes[i].endereco : '' %>">
+                                                                            </div>
+
+                                                                            <div class="form-group col-lg-4">
+                                                                                <label>Número:</label>
+                                                                                <input type="text" class="form-control" name="numero" id="numero" placeholder="" value="<%= clientes[i].cep ? clientes[i].numero : '' %>">
+                                                                            </div>
+                                                                            <div class="row"></div>
+                                                                            <div class="form-group col-lg-12">
+                                                                                <label>Complemento:</label>
+                                                                                <input type="text" class="form-control" name="complemento" id="complemento" placeholder="" value="<%= clientes[i].cep ? clientes[i].complemento : '' %>">
+                                                                            </div>
+                                                                            <div class="row"></div>
+                                                                            <div class="form-group col-lg-4">
+                                                                                <label>Uf</label>
+                                                                                <select class="form-control" name="uf">
+                                                                                    <option value="">Selecione</option>
+                                                                                    <option value="AC" <%=( clientes.length==1 && clientes[i].UF=="AC" ? "selected" : "" ) %>>AC</option>
+                                                                                    <option value="AL" <%=( clientes.length==1 && clientes[i].UF=="AL" ? "selected" : "" ) %>>AL</option>
+                                                                                    <option value="AP" <%=( clientes.length==1 && clientes[i].UF=="AP" ? "selected" : "" ) %>>AP</option>
+                                                                                    <option value="AM" <%=( clientes.length==1 && clientes[i].UF=="AM" ? "selected" : "" ) %>>AM</option>
+                                                                                    <option value="BA" <%=( clientes.length==1 && clientes[i].UF=="BA" ? "selected" : "" ) %>>BA</option>
+                                                                                    <option value="CE" <%=( clientes.length==1 && clientes[i].UF=="CE" ? "selected" : "" ) %>>CE</option>
+                                                                                    <option value="DF" <%=( clientes.length==1 && clientes[i].UF=="DF" ? "selected" : "" ) %>>DF</option>
+                                                                                    <option value="GO" <%=( clientes.length==1 && clientes[i].UF=="GO" ? "selected" : "" ) %>>GO</option>
+                                                                                    <option value="MA" <%=( clientes.length==1 && clientes[i].UF=="MA" ? "selected" : "" ) %>>MA</option>
+                                                                                    <option value="MT" <%=( clientes.length==1 && clientes[i].UF=="MT" ? "selected" : "" ) %>>MT</option>
+                                                                                    <option value="MS" <%=( clientes.length==1 && clientes[i].UF=="MS" ? "selected" : "" ) %>>MS</option>
+                                                                                    <option value="MG" <%=( clientes.length==1 && clientes[i].UF=="MG" ? "selected" : "" ) %>>MG</option>
+                                                                                    <option value="PA" <%=( clientes.length==1 && clientes[i].UF=="PA" ? "selected" : "" ) %>>PA</option>
+                                                                                    <option value="PB" <%=( clientes.length==1 && clientes[i].UF=="PB" ? "selected" : "" ) %>>PB</option>
+                                                                                    <option value="PR" <%=( clientes.length==1 && clientes[i].UF=="PR" ? "selected" : "" ) %>>PR</option>
+                                                                                    <option value="PE" <%=( clientes.length==1 && clientes[i].UF=="PE" ? "selected" : "" ) %>>PE</option>
+                                                                                    <option value="PI" <%=( clientes.length==1 && clientes[i].UF=="PI" ? "selected" : "" ) %>>PI</option>
+                                                                                    <option value="RJ" <%=( clientes.length==1 && clientes[i].UF=="RJ" ? "selected" : "" ) %>>RJ</option>
+                                                                                    <option value="RN" <%=( clientes.length==1 && clientes[i].UF=="RN" ? "selected" : "" ) %>>RN</option>
+                                                                                    <option value="RS" <%=( clientes.length==1 && clientes[i].UF=="RS" ? "selected" : "" ) %>>RS</option>
+                                                                                    <option value="RO" <%=( clientes.length==1 && clientes[i].UF=="RO" ? "selected" : "" ) %>>RO</option>
+                                                                                    <option value="SC" <%=( clientes.length==1 && clientes[i].UF=="SC" ? "selected" : "" ) %>>SC</option>
+                                                                                    <option value="SP" <%=( clientes.length==1 && clientes[i].UF=="SP" ? "selected" : "" ) %>>SP</option>
+                                                                                    <option value="SE" <%=( clientes.length==1 && clientes[i].UF=="SE" ? "selected" : "" ) %>>SE</option>
+                                                                                    <option value="TO" <%=( clientes.length==1 && clientes[i].UF=="TO" ? "selected" : "" ) %>>TO</option>
+                                                                                </select>
+                                                                            </div>
+                                                                            <div class="form-group col-lg-4">
+                                                                                <label>Cidade:</label>
+                                                                                <input type="text" class="form-control" name="cidade" id="cidade" placeholder="" value=<%= clientes[i].cep ? clientes[i].cidade : '' %>>
+                                                                            </div>
+                                                                            <div class="form-group col-lg-4">
+                                                                                <label>Bairro:</label>
+                                                                                <input type="text" class="form-control" name="bairro" id="bairro" placeholder="" value=<%= clientes[i].cep ? clientes[i].bairro : '' %>>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="chart tab-pane active" id="sales-chart-<%= clientes[i].id %>" style="position: relative; height: 300px;">
+
+                                                                            <div class="form-group col-lg-6">
+                                                                                <label>Id *:</label>
+                                                                                <input type="text" class="form-control" name="id" placeholder="" readonly="true" value="<%= clientes[i].id ? clientes[i].id : '' %>" required="true" >
+                                                                            </div>
+                                                                            
+                                                                            <div class="form-group col-lg-6">
+                                                                                <label>cpf *:</label>
+                                                                                <input type="text" class="form-control" name="cgccpf" placeholder="" value="<%= clientes[i].cgccpf ? clientes[i].cgccpf : '' %>" required="true" >
+                                                                            </div>
+                                                                            <div class="row"></div>
+
+                                                                            <div class="form-group col-lg-12">
+                                                                                <label>Nome *:</label>
+                                                                                <input type="text" class="form-control" name="nome" placeholder="" value="<%= clientes[i].nome ? clientes[i].nome : '' %>" required="true">
+                                                                            </div>
+                                                                            <div class="form-group col-lg-6">
+                                                                                <label>Fone:</label>
+                                                                                <input type="text" class="form-control" name="fone" placeholder="" value="<%= clientes[i].fone ? clientes[i].fone : '' %>">
+                                                                            </div>
+                                                                            <div class="form-group col-lg-6">
+                                                                                <label>E-mail:</label>
+                                                                                <input type="text" class="form-control" name="email" placeholder="" value="<%= clientes[i].email ? clientes[i].email : '' %>">
+                                                                            </div>
+                                                                            <div class="checkbox">
+                                                                                <label>
+                                                                                    <% if( clientes[i].consumidor == 'S' ) { %>
+                                                                                    <input type="checkbox" name="consumidor" checked> Consumidor Final?
+                                                                                    <% } else { %>
+                                                                                    <input type="checkbox" name="consumidor"> Consumidor Final?
+                                                                                    <% } %>
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                            
+                                                            <div class="modal-footer">
+                                                                <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/cliente'">Cancelar</button>
+
+                                                                <button type="submit" class="btn btn-primary">Salvar</button>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </form>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            
+                                            <!-- /.modal -->
+
+                                            <!-- Excluir Registro -->
+                                            <div class="modal modal-danger fade" id="modal-remove-<%= clientes[i].id %>">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            <h4 class="modal-title">Excluir Registro</h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>Deseja deletar o registro de número <%= clientes[i].id %>?</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <a class="btn btn-outline pull-left"  data-dismiss="modal" href="/cliente">
+                                                                Cancelar
+                                                            </a>
+                                                            <a class="btn btn-outline" href="/clienteExcluir/<%=  clientes[i].id   %>">
+                                                                Excluir
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                                <!-- /.modal-dialog -->
+                                            </div>
+                                            <!-- /.modal -->
+                                        </tr>
+                                        <% } %>    
+                                    </tbody>
+                                </table>
+                                </table>
+                                <div class="ajax-content">
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="button" class="btn btn-success btn-flat"  data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus-square"></i></button>
+                            </div>
+                            <!-- /.box-footer-->
+                        </div>
+                        <!-- /.box -->
+
+                    </section>
+                    <!-- /.content -->
+
+                </div>
+
+                <!-- /.content-wrapper -->
+                <% include /templates/footer %>
+
+                <% include /templates/config %>
+
+                <div class="control-sidebar-bg"></div>
+    </div>
+</body>
+<% include /templates/scripts %>
+
+</html>

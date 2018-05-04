@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include /templates/head %>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <% include /templates/header %>
+
+        <!-- =============================================== -->
+        <% include /templates/siderbar %>
+
+        <!-- =============================================== -->
+
+        <!-- Content Wrapper. Contains page content -->
+
+        <div class="content-wrapper">
+            <!-- escrever conteúdo do sistema -->
+            <section class="content-header">
+                <h1>
+                    CAIXA
+                    <small>LISTAGEM DE CAIXA</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="active">Caixa</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+
+                <!-- Default box -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            MANTER CAIXA
+                        </h3>
+                    
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>                                
+                    </div>
+                    <div class="modal fade" id="modal-default">
+                        <div class="modal-dialog">
+                            <form role="form" action="/caixaSalvar" method="post">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">NOVO REGISTRO</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                
+                                                <div class="form-group col-lg-12">
+                                                    <label>Nome:</label>
+                                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="" value="">
+                                                </div>
+                                                <div class="form-group col-lg-9">
+                                                    <label>Ip:</label>
+                                                    <input type="text" class="form-control" name="ip" id="ip" placeholder="" value="">
+                                                </div>
+                                
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Salvar</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
+                    <div class="box-body">
+                        <table id="grddados" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nome</th>
+                                    <th>Editar/Excluir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for( var i = 0; i < caixas.length; i++) {%>
+                                <tr>
+                                    <td><%= caixas[i].id %></td>
+                                    <td><%= caixas[i].nome %></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-flat" data-toggle="modal" data-target="#modal-edicao-<%= caixas[i].id %>"><i class="fa fa-random"></i></button>
+                                        <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-remove-<%= caixas[i].id %>"><i class="fa fa-remove"></i></button>
+                                    </td>
+                                        <div class="modal fade" id="modal-edicao-<%= caixas[i].id %>">
+                                        <div class="modal-dialog">
+                                            <form role="form" action="/caixaSalvar" method="post">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <h4 class="modal-title">EDIÇÃO REGISTRO</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="container-fluid">
+                                                            <div class="row">
+                                                                
+                                                                <div class="form-group col-lg-3">
+                                                                    <label>Id:</label>
+                                                                    <input type="text"  readonly="true" class="form-control" name="id" id="id" placeholder="" value="<%= caixas[i].id ? caixas[i].id : '' %>">
+                                                                </div>                                        
+                                                                <div class="form-group col-lg-9">
+                                                                    <label>Nome:</label>
+                                                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="" value="<%= caixas[i].nome ? caixas[i].nome : '' %>">
+                                                                </div>
+                                                                <div class="form-group col-lg-9">
+                                                                    <label>Ip:</label>
+                                                                    <input type="text" class="form-control" name="ip" id="ip" placeholder="" value="<%= caixas[i].ip ? caixas[i].ip : '' %>">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/caixa'">Cancelar</button>
+                                                        <button type="submit" class="btn btn-primary">Salvar</button>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </form>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                    
+                                    <!-- /.modal -->
+
+                                    <!-- Excluir Registro -->
+                                    <div class="modal modal-danger fade" id="modal-remove-<%= caixas[i].id %>">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <h4 class="modal-title">Excluir Registro</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Deseja deletar o registro de número <%= caixas[i].id %>?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="btn btn-outline pull-left"  data-dismiss="modal" href="/caixa">
+                                                        Cancelar
+                                                    </a>
+                                                    <a class="btn btn-outline" href="/caixaExcluir/<%=  caixas[i].id   %>">
+                                                        Excluir
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                    <!-- /.modal -->
+                                </tr>
+                                <% } %>    
+                            </tbody>
+                        </table>
+                        </table>
+                        <div class="ajax-content">
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button type="button" class="btn btn-success btn-flat"  data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus-square"></i></button>
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+                <!-- /.box -->
+
+            </section>
+            <!-- /.content -->
+
+        </div>
+
+        <!-- /.content-wrapper -->
+        <% include /templates/footer %>
+
+        <% include /templates/config %>
+
+        <div class="control-sidebar-bg"></div>
+    </div>
+</body>
+<% include /templates/scripts %>
+
+</html>

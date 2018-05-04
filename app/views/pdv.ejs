@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include /templates/head %>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <% include /templates/header %>
+        
+        <!-- =============================================== -->
+        <% include /templates/siderbar %>
+        
+        <!-- =============================================== -->
+
+        <!-- Content Wrapper. Contains page content -->
+        
+        <div class="content-wrapper">
+            <!-- escrever conteúdo do sistema -->
+            <!-- escrever conteúdo do sistema -->
+            <section class="content-header">
+                <h1>
+                    PDV
+                    <small>MÓDULO DE VENDAS</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="active">Pdv</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <% for(var i = 0; i < validacao.length; i++) {%>
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <a href="#" class="alert-link">Erro:</a>.<%= validacao[i].msg %>
+                    </div>
+                <% } %>
+                
+                <!-- Default box -->
+                <div class="box box-success box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            CAIXA PDV v2.1
+                        </h3>
+                    
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>                                
+                    </div>
+                    <div class="box-body">
+                        <div class="col-md-9">
+                            <% if ( pdvs.length > 0 ) { %>
+                            <div class="box box-success box-solid">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">CAIXA ABERTO - PROXIMA VENDA</h3>
+                                    <!-- /.box-tools -->
+                                    </div>
+                                
+                            <% } else { %>
+                                <div class="box box-danger box-solid">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">CAIXA FECHADO - VENDA PROIBIDA </h3>
+                                    <!-- /.box-tools -->
+                                    </div>
+                                
+                            <% } %>
+                                
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <img class="img-responsive pad" src="../images/pdv.png" alt="Photo">
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        <div class="col-md-3">
+                            <div class="box box-success box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Menu</h3>                    
+                                <!-- /.box-tools -->
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <% if ( pdvs.length > 0 ) { %>
+                                    <a class="btn btn-link" href="#" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i>Venda <u>B</u>alcão</a></br>
+                                    <a class="btn btn-link" href="#" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i>Venda <u>S</u>alão</a></br>
+                                    <a class="btn btn-link" href="#" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i>Venda <u>D</u>elivery</a></br>
+                                    <a class="btn btn-link" href="#" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i><u>F</u>echar Caixa</a></br>
+                                    <% } else { %>
+                                        <a class="btn btn-link" href="#" style="color:black;" accesskey="A"   data-toggle="modal" data-target="#modal-default"><i class="fa fa-fw fa-flash"></i><u>A</u>bertura Caixa</a></br>
+                                    <% } %>
+                                    <div class="modal fade" id="modal-default">
+                                        <div class="modal-dialog">
+                                            <form role="form" action="/aberturaCaixa" method="post">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <h4 class="modal-title">Abertura de Caixa</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="container-fluid">
+                                                            <div class="row">
+                                                                
+                                                                <div class="form-group col-lg-6">
+                                                                    <label>Data:</label>
+                                                                    <input type="date" class="form-control" name="data" value="" required="true">
+                                                                </div>
+
+                                                                <div class="form-group col-lg-6">
+                                                                    <label>Hora:</label>
+                                                                    <input type="time" class="form-control" name="hora" value="" required="true">
+                                                                </div>
+                                                                
+                                                                <div class="form-group col-lg-12" >
+                                                                    <label>Funcionário</label>
+                                                                    <select class="form-control" required="true" name="atendente">
+                                                                        <option value="">Selecione</option>
+                                                                        <% if( funcionarios.length > 0 ) {%>
+                                                                            <% for(var i=0; i < funcionarios.length; i++) {%>
+                                                                                <option value="<%= funcionarios[i].id %>"><%= funcionarios[i].nome %></option>
+                                                                            <% } %>
+                                                                        <% } %>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-lg-12" >
+                                                                    <label>Caixa</label>
+                                                                    <select class="form-control" required="true" name="caixa">
+                                                                        <option value="<%= caixa.id %>"><%= caixa.nome %></option>                                                                        
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-lg-12">
+                                                                    <label>Fundo:</label>
+                                                                    <input type="text" class="form-control" name="fundo" id="fundo" placeholder="">                                                               
+                                                                </div>
+                                                                <div class="form-group col-lg-12">
+                                                                    <label>Saldo:</label>
+                                                                    <input type="text" class="form-control" name="saldo" id="saldo" placeholder="" value="0.00">                                                               
+                                                                </div>
+                                                                
+                                                            </div>
+                                                        </div>                                        
+                                                    </div>
+                                                    
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                                                        <button type="submit" class="btn btn-primary">Salvar</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                        
+                    </div>
+                    <div class="box-footer">
+                    
+                    </div>
+
+                </div>
+
+            </section>            
+        </div>
+
+        <!-- /.content-wrapper -->
+        <% include /templates/footer %>        
+        
+        <% include /templates/config %>        
+
+        <div class="control-sidebar-bg"></div>
+    </div>
+</body>
+<% include /templates/scripts %>
+</html>

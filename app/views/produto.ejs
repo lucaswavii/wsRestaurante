@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include /templates/head %>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <% include /templates/header %>
+
+        <!-- =============================================== -->
+        <% include /templates/siderbar %>
+
+        <!-- =============================================== -->
+
+        <!-- Content Wrapper. Contains page content -->
+
+        <div class="content-wrapper">
+            <!-- escrever conteúdo do sistema -->
+            <section class="content-header">
+                <h1>
+                    PRODUTO
+                    <small>LISTAGEM DE PRODUTO</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="active">Produto</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+
+                <!-- Default box -->
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            MANTER PRODUTO
+                        </h3>
+                    
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>                                
+                    </div>
+                    <div class="modal fade" id="modal-default">
+                        <div class="modal-dialog">
+                            <form role="form" action="/produtoSalvar" method="post">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <h4 class="modal-title">NOVO REGISTRO</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                                <div class="form-group col-lg-6">
+                                                    <label>Ean:</label>
+                                                    <input type="text" class="form-control" name="ean" id="ean" placeholder="" value="">
+                                                </div>
+                                                
+                                                <div class="form-group col-lg-6">
+                                                    <label>Nome:</label>
+                                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="" value="">
+                                                </div>
+                                                <div class="form-group col-lg-3">
+                                                    <label>Preço:</label>
+                                                    <input type="text" class="form-control" name="preco" id="preco" placeholder="" value="">
+                                                </div>
+                                                <div class="form-group col-lg-3">
+                                                    <label>Estoque:</label>
+                                                    <input type="text" class="form-control" name="estoque" id="estoque" placeholder="" value="">
+                                                </div>
+                                                <div class="form-group col-lg-6" >
+                                                    <label>Categoria</label>
+                                                    <select class="form-control" required="true" name="categoria">
+                                                        <option value="">Selecione</option>
+                                                        <% if( categorias.length > 0 ) {%>
+                                                            <% for(var i=0; i < categorias.length; i++) {%>
+                                                                <option value="<%= categorias[i].id %>" <%= ( produtos.length == 1 && produtos[0].categoria == categorias[i].id ? "selected" : "" ) %>><%= categorias[i].nome %></option>
+                                                            <% } %>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                                
+                                                
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
+                                        <button type="submit" class="btn btn-primary">Salvar</button>
+                                    </div>
+                                </div>
+                            </form>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
+
+                    <div class="box-body">
+                        <table id="grddados" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Nome</th>
+                                    <th>Editar/Excluir</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for( var i = 0; i < produtos.length; i++) {%>
+                                <tr>
+                                    <td><%= produtos[i].id %></td>
+                                    <td><%= produtos[i].nome %></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-flat" data-toggle="modal" data-target="#modal-edicao-<%= produtos[i].id %>"><i class="fa fa-random"></i></button>
+                                        <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-remove-<%= produtos[i].id %>"><i class="fa fa-remove"></i></button>
+                                    </td>
+                                    <div class="modal fade" id="modal-edicao-<%= produtos[i].id %>">
+                                        <div class="modal-dialog">
+                                            <form role="form" action="/produtoSalvar" method="post">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                        <h4 class="modal-title">EDIÇÃO REGISTRO</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="container-fluid">
+                                                            <div class="row">
+                                                                <div class="form-group col-lg-3">
+                                                                    <label>Id:</label>
+                                                                    <input type="text"  readonly="true" class="form-control" name="id" id="id" placeholder="" value="<%= produtos[i].id ? produtos[i].id : '' %>">
+                                                                </div>                                        
+                                                                
+                                                                <div class="form-group col-lg-9">
+                                                                    <label>Ean:</label>
+                                                                    <input type="text" class="form-control" name="ean" id="ean" placeholder="" value="<%= produtos[i].ean ? produtos[i].ean : '' %>">
+                                                                </div>
+
+                                                                <div class="form-group col-lg-12">
+                                                                    <label>Nome:</label>
+                                                                    <input type="text" class="form-control" name="nome" id="nome" placeholder="" value="<%= produtos[i].nome ? produtos[i].nome : '' %>">
+                                                                </div>
+                                                               
+                                                                
+                                                                <div class="form-group col-lg-3">
+                                                                    <label>Preço:</label>
+                                                                    <input type="text" class="form-control" name="preco" id="preco" placeholder="" value="<%= produtos[i].preco ? produtos[i].preco : '' %>">
+                                                                </div>
+
+                                                                <div class="form-group col-lg-3">
+                                                                    <label>Estoque:</label>
+                                                                    <input type="text" class="form-control" name="estoque" id="estoque" placeholder="" value="<%= produtos[i].estoque ? produtos[i].estoque : '' %>">
+                                                                </div>
+                                                                <div class="form-group col-lg-6" >
+                                                                    <label>Categoria</label>
+                                                                    <select class="form-control" required="true" name="categoria" id="" >
+                                                                        <option value="">Selecione</option>
+                                                                        <% for(var j=0; j < categorias.length; j++) {%>
+                                                                            <option value="<%= categorias[j].id %>" <%= ( produtos[i].categoria == categorias[j].id ? "selected" : "" ) %>><%= categorias[j].nome %></option>
+                                                                        <% } %>
+                                                                    </select>
+                                                                </div>
+                                                                <div class="form-group col-lg-12">
+                                                                    <label for="exampleInputFile">Imagem</label>
+                                                                    <input type="file" id="imagem" accept="image/png, image/jpeg">
+                                                                </div>                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/produto'">Cancelar</button>
+                                                        <button type="submit" class="btn btn-primary">Salvar</button>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </form>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                    
+                                    <!-- /.modal -->
+
+                                    <!-- Excluir Registro -->
+                                    <div class="modal modal-danger fade" id="modal-remove-<%= produtos[i].id %>">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                    <h4 class="modal-title">Excluir Registro</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <p>Deseja deletar o registro de número <%= produtos[i].id %>?</p>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a class="btn btn-outline pull-left"  data-dismiss="modal" href="/produto">
+                                                        Cancelar
+                                                    </a>
+                                                    <a class="btn btn-outline" href="/produtoExcluir/<%=  produtos[i].id   %>">
+                                                        Excluir
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <!-- /.modal-content -->
+                                        </div>
+                                        <!-- /.modal-dialog -->
+                                    </div>
+                                    <!-- /.modal -->
+                                </tr>
+                                <% } %>    
+                            </tbody>
+                        </table>
+                        </table>
+                        <div class="ajax-content">
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <button type="button" class="btn btn-success btn-flat"  data-toggle="modal" data-target="#modal-default"><i class="fa fa-plus-square"></i></button>
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+                <!-- /.box -->
+
+            </section>
+            <!-- /.content -->
+
+        </div>
+
+        <!-- /.content-wrapper -->
+        <% include /templates/footer %>
+
+        <% include /templates/config %>
+
+        <div class="control-sidebar-bg"></div>
+    </div>
+</body>
+<% include /templates/scripts %>
+
+</html>

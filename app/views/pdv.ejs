@@ -18,6 +18,23 @@
 
         <!-- Content Wrapper. Contains page content -->
         
+        <% function leftPad(value, totalWidth, paddingChar) { %>
+        <%  var length = totalWidth - value.toString().length + 1; %>
+        <%    return Array(length).join(paddingChar || '0') + value; %>
+        <%  }; %>
+        <% var now = new Date() %>
+        <% var hoje = leftPad(now.getDate(), 2) + '/' + leftPad((now.getMonth() + 1), 2) + '/' +  leftPad(now.getFullYear(), 4) %>
+        <% var hora = leftPad(now.getHours(),2) + ":" + leftPad(now.getMinutes(),2) %>
+        <% var hoje = leftPad(now.getFullYear(), 4) + '-' + leftPad((now.getMonth() + 1), 2)  + '-' +   leftPad(now.getDate(), 2)   %>
+        
+        <% function getFormattedDate(date) { %>
+            <%  var year = date.getFullYear(); %>
+            <%  var month = (1 + date.getMonth()).toString(); %>
+            <%  month = month.length > 1 ? month : '0' + month; %>
+            <%  var day = date.getDate().toString(); %>
+            <%  day = day.length > 1 ? day : '0' + day; %>
+            <%  return year + '-' + month + '-' + day; %>
+        <% } %>
         <div class="content-wrapper">
             <!-- escrever conteúdo do sistema -->
             <!-- escrever conteúdo do sistema -->
@@ -114,17 +131,36 @@
                                                                 
                                                                 <div class="form-group col-lg-6">
                                                                     <label>Data:</label>
-                                                                    <input type="date" class="form-control" name="data" value="" required="true">
+                                                                   
+                                                                    <input type="date" class="form-control" name="data" required="true" value="<%= getFormattedDate(now)  %>" readonly="true">
                                                                 </div>
 
                                                                 <div class="form-group col-lg-6">
                                                                     <label>Hora:</label>
-                                                                    <input type="time" class="form-control" name="hora" value="" required="true">
+                                                                    <input type="time" class="form-control" name="hora" value="<%= hora %>" required="true" readonly="true">
+                                                                </div>
+                                                                <div class="form-group col-lg-6" >
+                                                                    <label>Empresa:</label>
+                                                                    <select class="form-control" required="true" name="empresa" readonly="true">
+                                                                        <% if( empresas.length > 0 ) {%>
+                                                                            <% for(var i=0; i < empresas.length; i++) {%>
+                                                                                <option value="<%= empresas[i].id %>"><%= empresas[i].nome %></option>
+                                                                            <% } %>
+                                                                        <% } %>
+                                                                    </select>
                                                                 </div>
                                                                 
+                                                                
+                                                                <div class="form-group col-lg-6" >
+                                                                    <label>Caixa</label>
+                                                                    <select class="form-control" required="true" name="caixa" readonly="true">
+                                                                        <option value="<%= caixa.id %>"><%= caixa.nome %></option>                                                                        
+                                                                    </select>
+                                                                </div>
+
                                                                 <div class="form-group col-lg-12" >
                                                                     <label>Funcionário</label>
-                                                                    <select class="form-control" required="true" name="atendente">
+                                                                    <select class="form-control" required="true" name="operador">
                                                                         <option value="">Selecione</option>
                                                                         <% if( funcionarios.length > 0 ) {%>
                                                                             <% for(var i=0; i < funcionarios.length; i++) {%>
@@ -133,17 +169,12 @@
                                                                         <% } %>
                                                                     </select>
                                                                 </div>
-                                                                <div class="form-group col-lg-12" >
-                                                                    <label>Caixa</label>
-                                                                    <select class="form-control" required="true" name="caixa">
-                                                                        <option value="<%= caixa.id %>"><%= caixa.nome %></option>                                                                        
-                                                                    </select>
-                                                                </div>
-                                                                <div class="form-group col-lg-12">
+
+                                                                <div class="form-group col-lg-6">
                                                                     <label>Fundo:</label>
-                                                                    <input type="text" class="form-control" name="fundo" id="fundo" placeholder="">                                                               
+                                                                    <input type="text" class="form-control" name="fundo" id="fundo" placeholder="" value="0.00">                                                               
                                                                 </div>
-                                                                <div class="form-group col-lg-12">
+                                                                <div class="form-group col-lg-6">
                                                                     <label>Saldo:</label>
                                                                     <input type="text" class="form-control" name="saldo" id="saldo" placeholder="" value="0.00">                                                               
                                                                 </div>

@@ -7,7 +7,8 @@ module.exports.index = function( application, req, res ){
     var caixaDao = new application.app.models.CaixaDAO(connection);
     var pdvDao = new application.app.models.PdvDAO(connection);
     var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
-    
+    var empresaDao = new application.app.models.EmpresaDAO(connection);
+
     caixaDao.listar(function(error, caixas ){
         
         if( error ) {
@@ -28,14 +29,16 @@ module.exports.index = function( application, req, res ){
             
             funcionarioDao.listar(function(error, funcionarios ){
                 pdvDao.listar(rta, function(error, pdvs ){
-                    if( error ) {
-                        
-                        res.render('pdv', { validacao : error, caixa: rta, caixas: caixas, pdvs : {}, funcionarios: funcionarios, sessao: {} });
-                        return;
-                    }
-                    console.log(rta)
-                    connection.end();
-                    res.render('pdv', { validacao : {}, caixa: rta, caixas: caixas, pdvs : pdvs, funcionarios: funcionarios, sessao: {} });
+                    empresaDao.editar( rta.empresa, function(error, empresas){
+                        if( error ) {
+                            
+                            res.render('pdv', { validacao : error, caixa: rta, caixas: caixas, empresas: empresas, pdvs : {}, funcionarios: funcionarios, sessao: {} });
+                            return;
+                        }
+                        console.log(rta)
+                        connection.end();
+                        res.render('pdv', { validacao : {}, caixa: rta, caixas: caixas, pdvs : pdvs, empresas: empresas, funcionarios: funcionarios, sessao: {} });
+                    });
                 });
             });
         }
@@ -51,7 +54,7 @@ module.exports.abertura = function( application, req, res ){
     
     var connection = application.config.dbConnection();
     var pdvDao = new application.app.models.PdvDAO(connection);        
-    
+    console.log(dadosForms)
     pdvDao.aberturaPdv(dadosForms, function(error, result){
         connection.end();   
        console.log(error)

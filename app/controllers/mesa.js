@@ -2,15 +2,18 @@ module.exports.index = function( application, req, res ){
     
     var connection = application.config.dbConnection();
     var MesaDao = new application.app.models.MesaDAO(connection);
-    
+    var empresaDao = new application.app.models.EmpresaDAO(connection);
+
     MesaDao.listar(function(error, mesas){
-        connection.end();
-        console.log(mesas)
-        if( error ) {
-            res.render('mesa', { validacao : {}, mesas : {}, sessao: {} });
-            return;
-        }
-        res.render('mesa', { validacao : {}, mesas : mesas, sessao: {} });
+        empresaDao.listar(function(error, empresas ){
+            connection.end();
+            
+            if( error ) {
+                res.render('mesa', { validacao : {}, mesas : {}, empresas:empresas, sessao: {} });
+                return;
+            }
+            res.render('mesa', { validacao : {}, mesas : mesas, empresas:empresas, sessao: {} });
+        });
     });
 }
 
@@ -18,14 +21,17 @@ module.exports.editar = function( application, req, res ){
     
     var connection = application.config.dbConnection();
     var MesaDao = new application.app.models.MesaDAO(connection);
-    
+    var empresaDao = new application.app.models.EmpresaDAO(connection);
+
     MesaDao.editar( req.params._id, function(error, mesas){
-        connection.end();
-        if( error ) {
-            res.render('mesaEditar', { validacao : [ {'msg': error.sqlMessage }], mesas : {}, sessao: req.session.usuario });
-            return;
-        }
-        res.render('mesaEditar', { validacao : {}, mesas : mesas, sessao: req.session.usuario });
+        empresaDao.listar(function(error, empresas ){
+            connection.end();
+            if( error ) {
+                res.render('mesaEditar', { validacao : [ {'msg': error.sqlMessage }], mesas : {}, empresas: empresas, sessao: req.session.usuario });
+                return;
+            }
+            res.render('mesaEditar', { validacao : {}, mesas : mesas, empresas: empresas, sessao: req.session.usuario });
+        });
     });
 }
 
@@ -42,7 +48,7 @@ module.exports.excluir = function( application, req, res ){
                     connection.end();
                 });
             } else {                
-                res.render('mesa', { validacao : [ {'msg': error.sqlMessage ? error.sqlMessage : error }], mesas : {}, sessao: req.session.usuario });
+                res.render('mesa', { validacao : [ {'msg': error.sqlMessage ? error.sqlMessage : error }], mesas : {}, empresas: {}, sessao: req.session.usuario });
             }
             return;
         }
@@ -59,7 +65,7 @@ module.exports.salvar = function( application, req, res ){
     var erros = req.validationErrors();
 
     if(erros){
-        res.render('mesa', {validacao: erros,  mesas: {}, sessao: {}});
+        res.render('mesa', {validacao: erros,  mesas: {}, empresas: {}, sessao: {}});
         return;
     }
     
@@ -71,7 +77,7 @@ module.exports.salvar = function( application, req, res ){
         if( error ) {
             console.log(error)
         
-            res.render('mesa', { validacao : error, mesas : {}, sessao: {} });
+            res.render('mesa', { validacao : error, mesas : {}, empresas: {}, sessao: {} });
             return;
         }
         res.redirect('/mesa');

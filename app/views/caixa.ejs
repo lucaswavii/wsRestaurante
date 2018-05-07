@@ -67,9 +67,20 @@
                                                     <label>Nome:</label>
                                                     <input type="text" class="form-control" name="nome" id="nome" placeholder="" value="">
                                                 </div>
-                                                <div class="form-group col-lg-9">
+                                                <div class="form-group col-lg-6">
                                                     <label>Ip:</label>
                                                     <input type="text" class="form-control" name="ip" id="ip" placeholder="" value="">
+                                                </div>
+                                                <div class="form-group col-lg-6" >
+                                                    <label>Empresa:</label>
+                                                    <select class="form-control" required="true" name="empresa">
+                                                        <option value="">Selecione</option>
+                                                        <% if( empresas.length > 0 ) {%>
+                                                            <% for(var e=0; e < empresas.length; e++) {%>
+                                                                <option value="<%= empresas[e].id %>">><%= empresas[e].nome %></option>
+                                                            <% } %>
+                                                        <% } %>
+                                                    </select>
                                                 </div>
                                 
                                             </div>
@@ -128,10 +139,22 @@
                                                                     <label>Nome:</label>
                                                                     <input type="text" class="form-control" name="nome" id="nome" placeholder="" value="<%= caixas[i].nome ? caixas[i].nome : '' %>">
                                                                 </div>
-                                                                <div class="form-group col-lg-9">
+                                                                <div class="form-group col-lg-6">
                                                                     <label>Ip:</label>
                                                                     <input type="text" class="form-control" name="ip" id="ip" placeholder="" value="<%= caixas[i].ip ? caixas[i].ip : '' %>">
                                                                 </div>
+                                                                <div class="form-group col-lg-6" >
+                                                                    <label>Empresa:</label>
+                                                                    <select class="form-control" required="true" name="empresa">
+                                                                        <option value="">Selecione</option>
+                                                                        <% if( empresas.length > 0 ) {%>
+                                                                            <% for(var e = 0; e < empresas.length; e++) {%>
+                                                                                <option value="<%= empresas[e].id %>" <%= empresas[e].id == caixas[i].id ? 'selected' : ''%>><%= empresas[e].nome %></option>
+                                                                            <% } %>
+                                                                        <% } %>
+                                                                    </select>
+                                                                </div>
+                                                
                                                             </div>
                                                         </div>
                                                     </div>

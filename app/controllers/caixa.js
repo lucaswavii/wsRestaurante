@@ -2,14 +2,17 @@ module.exports.index = function( application, req, res ){
     
     var connection = application.config.dbConnection();
     var caixaDao = new application.app.models.CaixaDAO(connection);
+    var empresaDao = new application.app.models.EmpresaDAO(connection);
     
     caixaDao.listar(function(error, caixas){
-        connection.end();
-        if( error ) {
-            res.render('caixa', { validacao : {}, caixas : {}, sessao: {} });
-            return;
-        }
-        res.render('caixa', { validacao : {}, caixas : caixas, sessao: {} });
+        empresaDao.listar(function(error, empresas){
+            connection.end();
+            if( error ) {
+                res.render('caixa', { validacao : {}, caixas : {}, empresas: {}, sessao: {} });
+                return;
+            }
+            res.render('caixa', { validacao : {}, caixas : caixas, empresas: empresas, sessao: {} });
+        });
     });
 }
 
@@ -17,14 +20,18 @@ module.exports.editar = function( application, req, res ){
     
     var connection = application.config.dbConnection();
     var caixaDao = new application.app.models.CaixaDAO(connection);
+    var empresaDao = new application.app.models.EmpresaDAO(connection);
     
     caixaDao.editar( req.params._id, function(error, caixas){
-        connection.end();
-        if( error ) {
-            res.render('caixaEditar', { validacao : [ {'msg': error.sqlMessage }], caixas : {}, sessao: req.session.usuario });
-            return;
-        }
-        res.render('caixaEditar', { validacao : {}, caixas : caixas, sessao: req.session.usuario });
+        empresaDao.listar(function(error, empresas){
+            connection.end();
+            if( error ) {
+                res.render('caixaEditar', { validacao : [ {'msg': error.sqlMessage }], caixas : {}, empresas: {}, sessao: req.session.usuario });
+                return;
+            }
+            res.render('caixaEditar', { validacao : {}, caixas : caixas, empresas: empresas, sessao: req.session.usuario });
+
+        });
     });
 }
 
@@ -58,19 +65,20 @@ module.exports.salvar = function( application, req, res ){
     var erros = req.validationErrors();
 
     if(erros){
-        res.render('caixa', {validacao: erros,  caixas: {}, sessao: {}});
+        res.render('caixa', {validacao: erros,  caixas: {}, empresas: {}, sessao: {}});
         return;
     }
     
     var connection = application.config.dbConnection();
-    var caixaDao = new application.app.models.CaixaDAO(connection);        
+    var caixaDao = new application.app.models.CaixaDAO(connection);
+            
     
     caixaDao.salvar(dadosForms, function(error, result){
         connection.end();   
         if( error ) {
             console.log(error)
         
-            res.render('caixa', { validacao : error, caixas : {}, sessao: {} });
+            res.render('caixa', { validacao : error, caixas : {}, empresas: {}, sessao: {} });
             return;
         }
         res.redirect('/caixa');

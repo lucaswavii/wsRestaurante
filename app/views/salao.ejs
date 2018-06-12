@@ -5,7 +5,7 @@
     <% include /templates/head %>
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
     <!-- Site wrapper -->
     <div class="wrapper">
 
@@ -18,24 +18,37 @@
 
         <!-- Content Wrapper. Contains page content -->
         
+        <% function leftPad(value, totalWidth, paddingChar) { %>
+        <%  var length = totalWidth - value.toString().length + 1; %>
+        <%    return Array(length).join(paddingChar || '0') + value; %>
+        <%  }; %>
+        <% var now = new Date() %>
+        <% var hoje = leftPad(now.getDate(), 2) + '/' + leftPad((now.getMonth() + 1), 2) + '/' +  leftPad(now.getFullYear(), 4) %>
+        <% var hora = leftPad(now.getHours(),2) + ":" + leftPad(now.getMinutes(),2) %>
+        <% var hoje = leftPad(now.getFullYear(), 4) + '-' + leftPad((now.getMonth() + 1), 2)  + '-' +   leftPad(now.getDate(), 2)   %>
+        
+        <% function getFormattedDate(date) { %>
+            <%  var year = date.getFullYear(); %>
+            <%  var month = (1 + date.getMonth()).toString(); %>
+            <%  month = month.length > 1 ? month : '0' + month; %>
+            <%  var day = date.getDate().toString(); %>
+            <%  day = day.length > 1 ? day : '0' + day; %>
+            <%  return year + '-' + month + '-' + day; %>
+        <% } %>
         <div class="content-wrapper">
             <!-- escrever conteúdo do sistema -->
             <!-- escrever conteúdo do sistema -->
             <section class="content-header">
                 <h1>
-                    PDV
-                    <small>MÓDULO DE VENDAS</small>
+                    Salão
+                    <small>Mesas de Atendimento</small>
                 </h1>
                 <ol class="breadcrumb">
                     <li>
                         <a href="#">
                             <i class="fa fa-dashboard"></i> Dashboard</a>
                     </li>
-                    <li>
-                        <a href="#">
-                            <i class="fa fa-dashboard"></i> Pdv</a>
-                    </li>
-                    <li class="active">Salão</li>
+                    <li class="active">Pdv</li>
                 </ol>
             </section>
             <!-- Main content -->
@@ -46,67 +59,97 @@
                         <a href="#" class="alert-link">Erro:</a>.<%= validacao[i].msg %>
                     </div>
                 <% } %>
-               
-                <!-- Default box -->
-                <div class="box box-success box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            SALÃO DE VENDAS PDV v2.1
-                        </h3>
-                    
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>                                
+                <div class="box box-widget widget-user-2">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-yellow">
+                        <div class="widget-user-image">
+                            <img class="img-circle" src="../images/logo_pdv.png" alt="User Avatar">
+                        </div>
+                        <!-- /.widget-user-image -->
+                        <h3 class="widget-user-username">wsPDV - Versão 2.1</h3>
+                        <h5 class="widget-user-desc">Wavii Consultoria e Sistemas Ltda</h5>
                     </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <div class="box-body no-padding">
-                                    <ul class="nav nav-pills nav-stacked">
-                                        <li class="active"><a href="#"><i class="fa fa-inbox"></i> MESAS
-                                            <span class="label label-primary pull-right">11</span></a></li>
-                                        <li><a href="#"><i class="fa fa-envelope-o"></i> ABERTAS
-                                            <span class="label label-success pull-right">0</span>
-                                        </a></li>
-                                        
-                                        <li><a href="#"><i class="fa fa-file-text-o"></i> ATENDIMENTO
-                                            <span class="label label-danger pull-right">0</span>
-                                        </a></li>
-                                        <li><a href="#"><i class="fa fa-filter"></i> FINALIZADAS <span class="label label-warning pull-right">0</span></a>
-                                        </li>
-                                        
-                                    </ul>
+                    <div class="box-footer no-padding">
+                        <div class="col-md-9">
+                            <!-- Box Comment -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <img class="img-circle" src="../images/iconmesa.png" alt="User Image">
+                                        <span class="username"><a href="#">Salão de Atendimento.</a></span>
+                                        <span class="description">12/06/2018 às 13:37</span>
+                                    </div>
+                                        <!-- /.user-block -->
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <!-- /.box-tools -->
                                 </div>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="tab-pane active" id="glyphicons">
-                                    <ul class="bs-glyphicons">
+                                <!-- /.box-header -->
+                                <div class="box-body">
                                     <% for( var i = 0; i < mesas.length; i++ ) { %>
-                                        <li>
-                                            <span class="glyphicon glyphicon glyphicon-cutlery"></span>
-                                            <span class="glyphicon-class"><p class="text-red"><b><%= mesas[i].nome %></b></p></span>
-                                            <button type="button" class="btn btn-block btn-success"></button>
-                                        </li>
-                                
+                                        <a class="btn btn-app">
+                                            <i class="fa fa-pencil-square-o"></i> <%= mesas[i].nome %>
+                                        </a>
                                     <% } %>
-                                    </ul>
+                          
                                 </div>
+                               
+                              
+                                <!-- /.box-footer -->
                             </div>
-                    </div>
-                
-                </div>
+                                    <!-- /.box -->
+                        </div>
 
+                         <div class="col-md-3">
+                            <!-- Box Comment -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
+                                        <span class="username"><a href="#">Lucas Chaves Ricarte</a></span>
+                                        <span class="description">Atendente de Caixa</span>
+                                    </div>
+                                        <!-- /.user-block -->
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <!-- /.box-tools -->
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <ul class="nav nav-stacked">
+                                        <li><a href="#"><i class="fa fa-pencil-square-o"></i> Mesa Livre <span class="pull-right badge bg-blue">31</span></a></li>
+                                        <li><a href="#"><i class="fa fa-pencil"></i> Mesa Ocupada <span class="pull-right badge bg-aqua">5</span></a></li>
+                                        <li><a href="#"><i class="fa fa-pencil-square"></i> Mesa Em Fechamento <span class="pull-right badge bg-green">12</span></a></li>
+                                    </ul>                  
+                                </div>
+                               
+                                
+                                <!-- /.box-footer -->
+                            </div>
+                                    <!-- /.box -->
+                        </div>
+                        
+                        <% for( var i = 0; i < mesas.length; i++ ) { %>
+                           
+                        <% } %>
+                      
+                    </div>                    
+                </div>
+                                               
+                
             </section>            
         </div>
-
+        
         <!-- /.content-wrapper -->
         <% include /templates/footer %>        
         
         <% include /templates/config %>        
 
         <div class="control-sidebar-bg"></div>
+        <div class="ajax-content">
+        </div>
     </div>
 </body>
 <% include /templates/scripts %>

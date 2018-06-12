@@ -5,7 +5,7 @@
     <% include /templates/head %>
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
     <!-- Site wrapper -->
     <div class="wrapper">
 
@@ -59,154 +59,249 @@
                         <a href="#" class="alert-link">Erro:</a>.<%= validacao[i].msg %>
                     </div>
                 <% } %>
-                
-                <!-- Default box -->
-                <div class="box box-success box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            CAIXA PDV v2.1
-                        </h3>
-                    
-                        <div class="box-tools pull-right">
-                            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip" title="Collapse">
-                                <i class="fa fa-minus"></i>
-                            </button>
-                        </div>                                
-                    </div>
-                    <div class="box-body">
-                        <div class="col-md-9">
-                            <% if ( pdvs.length > 0 ) { %>
-                            <div class="box box-success box-solid">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">CAIXA ABERTO - PROXIMA VENDA</h3>
-                                    <!-- /.box-tools -->
-                                    </div>
-                                
-                            <% } else { %>
-                                <div class="box box-danger box-solid">
-                                    <div class="box-header with-border">
-                                        <h3 class="box-title">CAIXA FECHADO - VENDA PROIBIDA </h3>
-                                    <!-- /.box-tools -->
-                                    </div>
-                                
-                            <% } %>
-                                
-                                <!-- /.box-header -->
-                                <div class="box-body">
-                                    <img class="img-responsive pad" src="../images/pdv.png" alt="Photo">
-                                </div>
-                                <!-- /.box-body -->
-                            </div>
-                            <!-- /.box -->
+                <div class="box box-widget widget-user-2">
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-yellow">
+                        <div class="widget-user-image">
+                            <img class="img-circle" src="../images/logo_pdv.png" alt="User Avatar">
                         </div>
-                        <div class="col-md-3">
-                            <div class="box box-success box-solid">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title">Menu</h3>                    
-                                <!-- /.box-tools -->
-                                </div>
-                                <!-- /.box-header -->
-                                <div class="box-body">
-                                    <% if ( pdvs.length > 0 ) { %>
-                                    <a class="btn btn-link" href="#" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i>Venda <u>B</u>alcão</a></br>
-                                    <a class="btn btn-link" href="/salao" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i>Venda <u>S</u>alão</a></br>
-                                    <a class="btn btn-link" href="#" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i>Venda <u>D</u>elivery</a></br>
-                                    <a class="btn btn-link" href="#" style="color:black;" accesskey="B"><i class="fa fa-fw fa-flash"></i><u>F</u>echar Caixa</a></br>
-                                    <% } else { %>
-                                        <a class="btn btn-link" href="#" style="color:black;" accesskey="A"   data-toggle="modal" data-target="#modal-default"><i class="fa fa-fw fa-flash"></i><u>A</u>bertura Caixa</a></br>
-                                    <% } %>
-                                    <div class="modal fade" id="modal-default">
-                                        <div class="modal-dialog">
-                                            <form role="form" action="/aberturaCaixa" method="post">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                        <h4 class="modal-title">Abertura de Caixa</h4>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="container-fluid">
-                                                            <div class="row">
-                                                                
-                                                                <div class="form-group col-lg-6">
-                                                                    <label>Data:</label>
-                                                                   
-                                                                    <input type="date" class="form-control" name="data" required="true" value="<%= getFormattedDate(now)  %>" readonly="true">
-                                                                </div>
-
-                                                                <div class="form-group col-lg-6">
-                                                                    <label>Hora:</label>
-                                                                    <input type="time" class="form-control" name="hora" value="<%= hora %>" required="true" readonly="true">
-                                                                </div>
-                                                                <div class="form-group col-lg-6" >
-                                                                    <label>Empresa:</label>
-                                                                    <select class="form-control" required="true" name="empresa" readonly="true">
-                                                                        <% if( empresas.length > 0 ) {%>
-                                                                            <% for(var i=0; i < empresas.length; i++) {%>
-                                                                                <option value="<%= empresas[i].id %>"><%= empresas[i].nome %></option>
-                                                                            <% } %>
-                                                                        <% } %>
-                                                                    </select>
-                                                                </div>
-                                                                
-                                                                
-                                                                <div class="form-group col-lg-6" >
-                                                                    <label>Caixa</label>
-                                                                    <select class="form-control" required="true" name="caixa" readonly="true">
-                                                                        <option value="<%= caixa.id %>"><%= caixa.nome %></option>                                                                        
-                                                                    </select>
-                                                                </div>
-
-                                                                <div class="form-group col-lg-12" >
-                                                                    <label>Funcionário</label>
-                                                                    <select class="form-control" required="true" name="operador">
-                                                                        <option value="">Selecione</option>
-                                                                        <% if( funcionarios.length > 0 ) {%>
-                                                                            <% for(var i=0; i < funcionarios.length; i++) {%>
-                                                                                <option value="<%= funcionarios[i].id %>"><%= funcionarios[i].nome %></option>
-                                                                            <% } %>
-                                                                        <% } %>
-                                                                    </select>
-                                                                </div>
-
-                                                                <div class="form-group col-lg-6">
-                                                                    <label>Fundo:</label>
-                                                                    <input type="text" class="form-control" name="fundo" id="fundo" placeholder="" value="0.00">                                                               
-                                                                </div>
-                                                                <div class="form-group col-lg-6">
-                                                                    <label>Saldo:</label>
-                                                                    <input type="text" class="form-control" name="saldo" id="saldo" placeholder="" value="0.00">                                                               
-                                                                </div>
-                                                                
-                                                            </div>
-                                                        </div>                                        
-                                                    </div>
-                                                    
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancelar</button>
-                                                        <button type="submit" class="btn btn-primary">Salvar</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                            <!-- /.modal-content -->
-                                        </div>
-                                        <!-- /.modal-dialog -->
+                        <!-- /.widget-user-image -->
+                        <h3 class="widget-user-username">wsPDV - Versão 2.1</h3>
+                        <h5 class="widget-user-desc">Wavii Consultoria e Sistemas Ltda</h5>
+                    </div>
+                    <div class="box-footer no-padding">
+                        <div class="box-body">
+                            <div class="col-md-8">
+                                <div class="box box-widget widget-user-2">
+                                 <% if ( pdvs.length > 0 ) { %>
+                                    <div class="widget-user-header bg-green">
+                                        <h3 class="widget-user-username">CAIXA ABERTO!</h3>
+                                        <h5 class="widget-user-desc">Seja Bem Vindo!</h5>
+                                    </div>
+                                <% } else { %>
+                                    <div class="widget-user-header bg-red">
+                                        <h3 class="widget-user-username">Dirija-se ao próximo caixa.</h3>
+                                        <h5 class="widget-user-desc">Caixa Fechado!</h5>
+                                    </div>
+                                <% } %>
+                                    <div class="box-footer no-padding">
+                                            <img class="img-responsive pad" src="../images/backgroudpdv.png" alt="Photo">                      
                                     </div>
                                 </div>
-                                <!-- /.box-body -->
                             </div>
-                            <!-- /.box -->
+                            <div class="col-md-4">
+                                <div class="box box-widget widget-user-2">
+                                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                                    <% if ( pdvs.length > 0 ) { %>
+                                        <div class="widget-user-header bg-green">
+                                            <div class="widget-user-image">
+                                                <img class="img-circle" src="../images/vendas-pdv.png" alt="User Avatar">
+                                            </div>
+                                                <!-- /.widget-user-image -->
+                                            <h3 class="widget-user-username">Caixa Aberto</h3>
+                                            <% for(var i=0; i < funcionarios.length; i++) {%>
+                                                <% if( funcionarios[i].id == pdvs[0].operador ) { %>
+                                                    <h5 class="widget-user-desc"><%= funcionarios[i].nome %></h5>
+                                                <% } %>
+                                            <% } %>                                            
+                                        </div>                                        
+                                    <% } else { %>
+                                        <div class="widget-user-header bg-red">
+                                            <div class="widget-user-image">
+                                                <img class="img-circle" src="../images/vendas-pdv.png" alt="User Avatar">
+                                            </div>
+                                                <!-- /.widget-user-image -->
+                                            <h3 class="widget-user-username">Caixa Fechado</h3>
+                                            <h5 class="widget-user-desc">Aguardando Operador</h5>
+                                        </div>
+
+                                    <% } %>
+                                    <div class="box-footer no-padding">
+                                        <ul class="nav nav-stacked">
+                                            <% if( pdvs.length > 0  ) { %>
+                                                <li><a href="#" style="color: gray; pointer-events: none;">Abertura de Caixa <span class="pull-right badge bg-blue">F1</span></a></li>
+                                                <ul class="nav nav-stacked" data-widget="tree">
+                                                    <li class="treeview">
+                                                                                                    
+                                                        <a href="#">
+                                                            <span>Vendas</span>
+                                                            <span class="pull-right-container">
+                                                                <i class="fa fa-angle-left pull-right"></i>
+                                                                <span class="pull-right badge bg-blue">3</span>
+                                                            </span>
+                                                        </a>
+                                                        <ul class="treeview-menu">
+                                                            <li><a href="/salao"> Balcão</a></li>
+                                                            <li><a href="#"> Salão</a></li>
+                                                            <li><a href="#"> Delivery</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                
+                                                <ul class="nav nav-stacked" data-widget="tree">
+                                                    <li class="treeview">
+                                                                                                    
+                                                        <a href="#">
+                                                            <span>Fiscal</span>
+                                                            <span class="pull-right-container">
+                                                                <i class="fa fa-angle-left pull-right"></i>
+                                                                <span class="pull-right badge bg-blue">3</span>
+                                                            </span>
+                                                        </a>
+                                                        <ul class="treeview-menu">
+                                                            <li><a href="#"> Leitura X</a></li>
+                                                            <li><a href="#"> Leitura Z</a></li>
+                                                            <li><a href="#"> Memoria Fiscal</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                
+                                                <ul class="nav nav-stacked" data-widget="tree">
+                                                    <li class="treeview">
+                                                                                                    
+                                                        <a href="#">
+                                                            <span>Operações</span>
+                                                            <span class="pull-right-container">
+                                                                <i class="fa fa-angle-left pull-right"></i>
+                                                            </span>
+                                                        </a>
+                                                        <ul class="treeview-menu">
+                                                            <li><a href="#"> Sangria</a></li>
+                                                            <li><a href="#"> Despesas</a></li>
+                                                            <li><a href="#"> Devolução/Troca</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                                <li><a href="#" style="color: gray; pointer-events: none;">Configurações <span class="pull-right badge bg-blue">F1</span></a></li>
+                                                
+                                            <% } else { %>
+                                            
+                                                <li><a href="#" data-toggle="modal" data-target="#modal-default">Abertura de Caixa <span class="pull-right badge bg-blue">F1</span></a></li>
+                                                <li><a href="#" style="color: gray; pointer-events: none;">Fiscal <span class="pull-right badge bg-blue">F1</span></a></li>
+                                                <ul class="nav nav-stacked" data-widget="tree">
+                                                    <li class="treeview">
+                                                        <a href="#">
+                                                            <span>Configurações</span>
+                                                            <span class="pull-right-container">
+                                                                <i class="fa fa-angle-left pull-right"></i>
+                                                            </span>
+                                                        </a>
+                                                        <ul class="treeview-menu">
+                                                            <li><a href="#"> Vendas</a></li>
+                                                            <li><a href="#"> Condições Pagamento</a></li>
+                                                            <li><a href="#"> Sangrias</a></li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            <% } %>
+                                                
+                                            
+                                            <ul class="nav nav-stacked" data-widget="tree">
+                                                <li class="treeview">
+                                                    <a href="#">
+                                                        <span>Relatórios</span>
+                                                        <span class="pull-right-container">
+                                                            <i class="fa fa-angle-left pull-right"></i>
+                                                        </span>
+                                                    </a>
+                                                    <ul class="treeview-menu">
+                                                        <li><a href="#"> Vendas</a></li>
+                                                        <li><a href="#"> Condições Pagamento</a></li>
+                                                        <li><a href="#"> Sangrias</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <li><a href="#">Fechamento de Caixa<span class="pull-right badge bg-red">F4</span></a></li>
+                                            
+                                        </ul>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                               
+                
+            </section>            
+        </div>
+        <div class="modal fade" id="modal-default">
+            <div class="modal-dialog">
+                <form role="form" action="/aberturaCaixa" method="post">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title">Abertura de Caixa</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    
+                                    <div class="form-group col-lg-6">
+                                        <label>Data:</label>
+                                        
+                                        <input type="date" class="form-control" name="data" required="true" value="<%= getFormattedDate(now)  %>" readonly="true">
+                                    </div>
+
+                                    <div class="form-group col-lg-6">
+                                        <label>Hora:</label>
+                                        <input type="time" class="form-control" name="hora" value="<%= hora %>" required="true" readonly="true">
+                                    </div>
+                                    <div class="form-group col-lg-6" >
+                                        <label>Empresa:</label>
+                                        <select class="form-control" required="true" name="empresa" readonly="true">
+                                            <% if( empresas.length > 0 ) {%>
+                                                <% for(var i=0; i < empresas.length; i++) {%>
+                                                    <option value="<%= empresas[i].id %>"><%= empresas[i].nome %></option>
+                                                <% } %>
+                                            <% } %>
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                    <div class="form-group col-lg-6" >
+                                        <label>Caixa</label>
+                                        <select class="form-control" required="true" name="caixa" readonly="true">
+                                            <option value="<%= caixa.id %>"><%= caixa.nome %></option>                                                                        
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-lg-12" >
+                                        <label>Funcionário</label>
+                                        <select class="form-control" required="true" name="operador">
+                                            <option value="">Selecione</option>
+                                            <% if( funcionarios.length > 0 ) {%>
+                                                <% for(var i=0; i < funcionarios.length; i++) {%>
+                                                    <option value="<%= funcionarios[i].id %>"><%= funcionarios[i].nome %></option>
+                                                <% } %>
+                                            <% } %>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-lg-6">
+                                        <label>Fundo:</label>
+                                        <input type="text" class="form-control" name="fundo" id="fundo" placeholder="" value="0.00">                                                               
+                                    </div>
+                                    <div class="form-group col-lg-6">
+                                        <label>Saldo:</label>
+                                        <input type="text" class="form-control" name="saldo" id="saldo" placeholder="" value="0.00">                                                               
+                                    </div>
+                                    
+                                </div>
+                            </div>                                        
                         </div>
                         
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default pull-left" data-dismiss="modal"  onclick="window.location.href='/pdv'">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Salvar</button>
+                        </div>
                     </div>
-                    <div class="box-footer">
-                    
-                    </div>
-
-                </div>
-
-            </section>            
+                </form>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
         </div>
 
         <!-- /.content-wrapper -->
@@ -215,6 +310,8 @@
         <% include /templates/config %>        
 
         <div class="control-sidebar-bg"></div>
+        <div class="ajax-content">
+        </div>
     </div>
 </body>
 <% include /templates/scripts %>

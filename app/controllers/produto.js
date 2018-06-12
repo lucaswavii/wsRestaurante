@@ -49,13 +49,12 @@ module.exports.salvar = function( application, req, res ){
     req.assert('nome', 'Nome é obrigatório').notEmpty();       
     
     var erros = req.validationErrors();
-    console.log(dadosForms)
-            
+              
     if(erros){
         categoriaDao.listar(function(error, categorias){
             produtoDao.listar(function(error, produtos){
                 connection.end();
-                res.render('produto', { validacao : {}, produtos : produtos,  categorias: categorias, sessao: {} });
+                res.render('produto', { validacao : erros, produtos : produtos,  categorias: categorias, sessao: {} });
                 return;
             });        
         });
@@ -63,11 +62,12 @@ module.exports.salvar = function( application, req, res ){
     
     
     produtoDao.salvar(dadosForms, function(error, result){
+
         if( error ) {
-            categoriaDao.listar(function(error, categorias){
-                produtoDao.listar(function(error, produtos){
+            categoriaDao.listar(function(categoriaErro, categorias){
+                produtoDao.listar(function(produtoErro, produtos){
                     connection.end();
-                    res.render('produto', { validacao : {}, produtos : produtos,  categorias: categorias, sessao: {} });
+                    res.render('produto', { validacao : error, produtos : produtos,  categorias: categorias, sessao: {} });
                     return;
                 });        
             });                

@@ -72,12 +72,16 @@
                     <div class="box-footer no-padding">
                         <div class="col-md-9">
                             <!-- Box Comment -->
+                            <a class="btn btn-link" href="/comanda" style="color:rgb(0, 0, 0);" accesskey="C"><i class="fa fa-exchange"></i> <u>T</u>ransferência</a>                                     
+                
+                            <a class="btn btn-link" href="/pdv" style="color:rgb(0, 0, 0);" accesskey="V"><i class="fa fa-mail-reply"></i> <u>V</u>oltar</a>                                     
+                
                             <div class="box box-widget">
                                 <div class="box-header with-border">
                                     <div class="user-block">
                                         <img class="img-circle" src="../images/iconmesa.png" alt="User Image">
                                         <span class="username"><a href="#">Salão de Atendimento.</a></span>
-                                        <span class="description">12/06/2018 às 13:37</span>
+                                        <span class="description"><%= pdvs.length > 0 ? getFormattedDate(pdvs[0].data ) : '00/00/0000' %> às <%= pdvs.length > 0 ? pdvs[0].hora : '00:00' %></span>
                                     </div>
                                         <!-- /.user-block -->
                                     <div class="box-tools">
@@ -85,20 +89,108 @@
                                     </div>
                                     <!-- /.box-tools -->
                                 </div>
+                                
+                     
                                 <!-- /.box-header -->
+                                <% var livres = 0; usadas= 0; %>
                                 <div class="box-body">
-                                    <% for( var i = 0; i < mesas.length; i++ ) { %>
-                                        <a class="btn btn-app">
-                                            <i class="fa fa-pencil-square-o"></i> <%= mesas[i].nome %>
+                                    <% for( var i = 0; i < salao.length; i++ ) { %>
+                                        <% if( salao[i].data ) { %>
+                                            <a class="btn btn-app" href="/itens/<%= salao[i].idVenda %>" style="background-color: orange;color:black;">
+                                            <% usadas += 1; %>
+                                        <% } else { %> 
+                                            <a class="btn btn-app"  style="background-color: green;color:white;" data-toggle="modal" data-target="#modal-abre-<%= salao[i].id %>">
+                                            <% livres += 1; %> 
+                                        <% } %>      
+                                                                                  
+                                            <b><%= salao[i].nome %></b></br>R$ <%= salao[i].total > 0 ? salao[i].total.toFixed(2) : '0.00'  %>
                                         </a>
-                                    <% } %>
-                          
+                                        <div class="modal fade" id="modal-abre-<%= salao[i].id %>">
+                                            <div class="modal-dialog">
+                                                <form role="form" action="/aberturaMesa" method="post">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            <h4 class="modal-title">Iniciar Atendimento <%= salao[i].nome %></h4>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="container-fluid">
+                                                                <div class="row">
+                                                                    <div class="form-group col-lg-4" >
+                                                                        <label>Pdv:</label>
+                                                                        <input type="text" class="form-control" name="pdv" value="<%= pdvs.length > 0 ? pdvs[0].id : null %>" required="true" readonly="true">
+                                                                    </div>
+                                                                    
+                                                                    <div class="form-group col-lg-4">
+                                                                        <label>Data:</label>                                                                        
+                                                                        <input type="date" class="form-control" name="data" required="true" value="<%= getFormattedDate(now)  %>" readonly="true">
+                                                                    </div>
+
+                                                                    <div class="form-group col-lg-4">
+                                                                        <label>Hora:</label>
+                                                                        <input type="time" class="form-control" name="hora" value="<%= hora %>" required="true" readonly="true">
+                                                                    </div>
+                                                                    
+                                                                   
+
+                                                                    <div class="form-group col-lg-6" >
+                                                                        <label>Mesa:</label>
+                                                                        <select class="form-control" required="true" name="mesa">
+                                                                          
+                                                                            <% if( mesas.length > 0 ) {%>
+                                                                                <% for(var e=0; e < mesas.length; e++) {%>
+                                                                                    <% if( mesas[e].id == salao[i].id ) { %>
+                                                                                        <option value="<%= mesas[e].id %>"><%= mesas[e].nome %></option>
+                                                                                    <% } %>
+                                                                                <% } %>
+                                                                            <% } %>
+                                                                        </select>
+                                                                    </div>
+
+                                                                    <div class="form-group col-lg-6" >
+                                                                        <label>Atendente:</label>
+                                                                        <select class="form-control select2" required="true" name="Atendente">                                                                          
+                                                                            <option value="">Selecione</option>
+                                                                            <% for(var e=0; e < atendentes.length; e++) {%>
+                                                                                <option value="<%= atendentes[e].id %>"><%= atendentes[e].nome %></option>
+                                                                            <% } %>
+                                                                       </select>
+                                                                    </div>
+
+
+                                                                    <div class="form-group col-lg-12" >
+                                                                        <label>Cliente:</label>
+                                                                        <select class="form-control select2" required="true" name="cliente">                                                                          
+                                                                            <option value="">Selecione</option>
+                                                                            <% for(var e=0; e < clientes.length; e++) {%>
+                                                                                <option value="<%= clientes[e].id %>"><%= clientes[e].nome %></option>
+                                                                            <% } %>
+                                                                       </select>
+                                                                    </div>
+
+                                                                    
+                                                                </div>
+                                                            </div>      
+                                                            
+                                                        </div>
+                                                        
+                                                        <div class="modal-footer">
+                                                            <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/salao'">Cancelar</button>
+                                                            <button type="submit" class="btn btn-primary">Salvar</button>
+                                                        </div>
+                                                        
+                                                    </div>
+                                                </form>
+                                                <!-- /.modal-content -->
+                                            </div>
+                                            <!-- /.modal-dialog -->
+                                        </div>
+                                            
+                                    <% } %>                          
                                 </div>
-                               
-                              
-                                <!-- /.box-footer -->
                             </div>
-                                    <!-- /.box -->
                         </div>
 
                          <div class="col-md-3">
@@ -107,8 +199,8 @@
                                 <div class="box-header with-border">
                                     <div class="user-block">
                                         <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
-                                        <span class="username"><a href="#">Lucas Chaves Ricarte</a></span>
-                                        <span class="description">Atendente de Caixa</span>
+                                        <span class="username"><a href="#"><%= funcionarios[0].nome %></a></span>
+                                        <span class="description"><%= salao.length > 0 ? salao[0].empresa : "" %></span>
                                     </div>
                                         <!-- /.user-block -->
                                     <div class="box-tools">
@@ -119,26 +211,14 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <ul class="nav nav-stacked">
-                                        <li><a href="#"><i class="fa fa-pencil-square-o"></i> Mesa Livre <span class="pull-right badge bg-blue">31</span></a></li>
-                                        <li><a href="#"><i class="fa fa-pencil"></i> Mesa Ocupada <span class="pull-right badge bg-aqua">5</span></a></li>
-                                        <li><a href="#"><i class="fa fa-pencil-square"></i> Mesa Em Fechamento <span class="pull-right badge bg-green">12</span></a></li>
+                                        <li><a href="#">Mesa Livre <span class="pull-right badge bg-green"><%= livres %></span></a></li>
+                                        <li><a href="#">Mesa Ocupada <span class="pull-right badge bg-yellow"><%= usadas %></span></a></li>
                                     </ul>                  
                                 </div>
-                               
-                                
-                                <!-- /.box-footer -->
                             </div>
-                                    <!-- /.box -->
                         </div>
-                        
-                        <% for( var i = 0; i < mesas.length; i++ ) { %>
-                           
-                        <% } %>
-                      
                     </div>                    
                 </div>
-                                               
-                
             </section>            
         </div>
         

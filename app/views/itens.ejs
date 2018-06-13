@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <% include /templates/head %>
+</head>
+
+<body class="hold-transition skin-blue sidebar-collapse sidebar-mini">
+    <!-- Site wrapper -->
+    <div class="wrapper">
+
+        <% include /templates/header %>
+        
+        <!-- =============================================== -->
+        <% include /templates/siderbar %>
+        
+        <!-- =============================================== -->
+
+        <!-- Content Wrapper. Contains page content -->
+        
+        <% function leftPad(value, totalWidth, paddingChar) { %>
+        <%  var length = totalWidth - value.toString().length + 1; %>
+        <%    return Array(length).join(paddingChar || '0') + value; %>
+        <%  }; %>
+        <% var now = new Date() %>
+        <% var hoje = leftPad(now.getDate(), 2) + '/' + leftPad((now.getMonth() + 1), 2) + '/' +  leftPad(now.getFullYear(), 4) %>
+        <% var hora = leftPad(now.getHours(),2) + ":" + leftPad(now.getMinutes(),2) %>
+        <% var hoje = leftPad(now.getFullYear(), 4) + '-' + leftPad((now.getMonth() + 1), 2)  + '-' +   leftPad(now.getDate(), 2)   %>
+        
+        <% function getFormattedDate(date) { %>
+            <%  var year = date.getFullYear(); %>
+            <%  var month = (1 + date.getMonth()).toString(); %>
+            <%  month = month.length > 1 ? month : '0' + month; %>
+            <%  var day = date.getDate().toString(); %>
+            <%  day = day.length > 1 ? day : '0' + day; %>
+            <%  return year + '-' + month + '-' + day; %>
+        <% } %>
+        <div class="content-wrapper">
+            <!-- escrever conteúdo do sistema -->
+            <!-- escrever conteúdo do sistema -->
+            <section class="content-header">
+                <h1>
+                    Salão
+                    <small>Mesas de Atendimento</small>
+                </h1>
+                <ol class="breadcrumb">
+                    <li>
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> Dashboard</a>
+                    </li>
+                    <li class="active">Pdv</li>
+                </ol>
+            </section>
+            <!-- Main content -->
+            <section class="content">
+                <% for(var i = 0; i < validacao.length; i++) {%>
+                    <div class="alert alert-danger alert-dismissable">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <a href="#" class="alert-link">Erro:</a>.<%= validacao[i].msg %>
+                    </div>
+                <% } %>
+                <div class="box box-widget widget-user-2">
+                        
+                    <!-- Add the bg color to the header using any of the bg-* classes -->
+                    <div class="widget-user-header bg-yellow">
+                        <div class="widget-user-image">
+                            <img class="img-circle" src="../images/logo_pdv.png" alt="User Avatar">
+                        </div>
+                        <!-- /.widget-user-image -->
+                        <h3 class="widget-user-username">wsPDV - Versão 2.1</h3>
+                        <h5 class="widget-user-desc">Wavii Consultoria e Sistemas Ltda</h5>
+                    </div>
+                    <div class="box-footer no-padding">
+                        <div class="col-md-12">
+                            <!-- Box Comment -->
+                            <a class="btn btn-link" href="/Solicitar Conta" style="color:rgb(0, 0, 0);" accesskey="S"><i class="fa fa-calculator"></i> <u>S</u>olicitar Conta</a>                                     
+                
+                            <a class="btn btn-link" href="/comanda" style="color:rgb(0, 0, 0);" accesskey="C"><i class="fa fa-exchange"></i> <u>T</u>ransferência</a>                                     
+                
+                            <a class="btn btn-link" href="/salao" style="color:rgb(0, 0, 0);" accesskey="V"><i class="fa fa-mail-reply"></i> <u>V</u>oltar</a>                                     
+                
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
+                                        <span class="username"><a href="#">Lucas Ricarte</a></span>
+                                        <span class="description">MESA 01</span>
+    
+                                    </div>
+                                        <!-- /.user-block -->
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <!-- /.box-tools -->
+                                </div>
+                                <!-- /.box-header -->
+                              
+                                <div class="box-body">
+
+                                    <a class="btn btn-app">
+                                        <i class="fa fa-filter"></i> Todos
+                                    </a>
+                                    <% for( var i = 0; i < categorias.length; i++ ) { %>
+                                        <a class="btn btn-app">
+                                                <span class="badge bg-yellow">3</span>
+                                            <%= categorias[i].nome %>
+                                        </a>
+                                    <% } %>
+                                                            
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>   
+                    <div class="box-footer no-padding">
+                        <div class="col-md-9">
+                            <!-- Box Comment -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <img class="img-circle" src="../images/iconeproduto.png" alt="User Image">
+                                        <span class="username"><a href="#">Produtos</a></span>
+                                        <span class="description">Meus Produtos</span>
+                                    </div>
+                                        <!-- /.user-block -->
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <!-- /.box-tools -->
+                                </div>
+                                <!-- /.box-header -->
+                              
+                                <div class="box-body">
+                                        
+                                        <% for( var i = 0; i < produtos.length; i++ ) { %>
+                                            <a class="btn btn-app" data-toggle="modal" data-target="#modal-item-<%= produtos[i].id %>">
+                                                <%= produtos[i].nome %></br><b>R$ <%= produtos[i].preco.toFixed(2) %></b>
+                                            </a>
+                                            <div class="modal fade" id="modal-item-<%= produtos[i].id %>">
+                                                <div class="modal-dialog">
+                                                    <form role="form" action="/incluirItens/<%= idVenda %>" method="post">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                <h4 class="modal-title">Adicionar Item:<%= produtos[i].nome %></h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="container-fluid">
+                                                                    <div class="row">
+                                                                        <div class="form-group col-lg-2" >
+                                                                            <label>Id:</label>
+                                                                            <input type="text" class="form-control" name="movimento"  required="true" readonly="true" value="<%= idVenda %>">
+                                                                        </div>
+                                                                        <div class="form-group col-lg-4" >
+                                                                            <label>Produto:</label>
+                                                                            <select class="form-control" required="true" name="produto" required="true" readonly="true">
+                                                                                <% for(var e=0; e < produtos.length; e++) {%>
+                                                                                    <% if( produtos[i].id == produtos[e].id ) { %>
+                                                                                    <option value="<%= produtos[e].id %>"><%= produtos[e].nome %></option>
+                                                                                    <% } %>
+                                                                                <% } %>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="form-group col-lg-2" >
+                                                                            <label>Quantidade:</label>
+                                                                            <input type="number" class="form-control" name="quantidade" value="" required="true" autofocus="autofocus">
+                                                                        </div>
+                                                                        <div class="form-group col-lg-2" >
+                                                                            <label>Unitário:</label>
+                                                                            <input type="text" class="form-control" name="unitario" value="<%= produtos[i].preco.toFixed(2) %>" required="true" readonly="true">
+                                                                        </div>
+
+                                                                        <div class="form-group col-lg-2" >
+                                                                            <label>Total:</label>
+                                                                            <input type="text" class="form-control" name="total" value="<%= produtos[i].total > 0 ? produtos[i].total.toFixed(2) : 0 %>" required="true" readonly="true">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>  
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/itens/<%= idVenda %>'">Cancelar</button>
+                                                                <button type="submit" class="btn btn-primary">Adicionar</button>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    </form>
+                                                    <!-- /.modal-content -->
+                                                </div>
+                                            <!-- /.modal-dialog -->
+                                            </div>
+                                        <% } %>
+                                       
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <!-- Box Comment -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <span class="username"><a href="#">Total</a></span>
+                                        <span class="description">DAN SPETUS</span>
+                                    </div>
+                                        <!-- /.user-block -->
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <!-- /.box-tools -->
+                                </div>
+                                <% var quantidade =0; var total = 0;%>
+                                <% for( var i = 0; i < itens.length; i++ ) { %>
+                                    <% quantidade += itens[i].quantidade %>
+                                    <% total += itens[i].total %>
+                                    
+                                <% } %>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <ul class="nav nav-stacked">
+                                        <li><a href="#">Itens:<span class="pull-right badge bg-yellow"><%= quantidade %></span></a></li>
+                                        <li><a href="#">Total:<span class="pull-right badge bg-green"><%= total.toFixed(2) %></span></a></li>
+                                    </ul>                  
+                                </div>
+                            </div>
+                        </div>                         
+                    </div>
+                    <div class="box-footer no-padding">
+                        <div class="col-md-12">
+                            <!-- Box Comment -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <img class="img-circle" src="../images/iconmesa.png" alt="User Image">
+                                        <span class="username"><a href="#">MESA 01</a></span>
+                                        <span class="description">ITENS DA MESA</span>        
+                                    </div>
+                                            <!-- /.user-block -->
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                        <!-- /.box-tools -->
+                                </div>
+                                <div class="box-body">
+                                    <% if( itens.length > 0 ) {%>
+                                    <table id="grddados" class="table table-bordered table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Produto</th>
+                                                <th>Quantidade</th>
+                                                <th>Unitário</th>
+                                                <th>Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% for( var i = 0; i < itens.length; i++ ) { %>
+                                                <tr>
+                                                    <th>
+                                                        <% for(var e=0; e < produtos.length; e++) {%>
+                                                            <% if( itens[i].produto== produtos[e].id ) { %>
+                                                                <%= produtos[e].nome  %>
+                                                            <% } %>
+                                                        <% } %>
+                                                        
+                                                    </th>
+                                                    <th><%= itens[i].quantidade %></th>
+                                                    <th><%= itens[i].unitario.toFixed(2)  %></th>
+                                                    <th><%= itens[i].total.toFixed(2)  %></th>
+                                                    <th></th>
+                                                </tr>
+                                                
+                                            <% } %>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Produto</th>
+                                                <th>Quantidade</th>
+                                                <th>Unitário</th>
+                                                <th>Total</th>
+                                                <th></th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>   
+                                    <% } %>             
+                                </div>
+                            </div>
+                        </div>   
+                    </div>
+                </div>
+            </section>            
+        </div>
+        
+        <!-- /.content-wrapper -->
+        <% include /templates/footer %>        
+        
+        <% include /templates/config %>        
+
+        <div class="control-sidebar-bg"></div>
+        <div class="ajax-content">
+        </div>
+    </div>
+</body>
+<% include /templates/scripts %>
+</html>

@@ -53,12 +53,7 @@
             </section>
             <!-- Main content -->
             <section class="content">
-                <% for(var i = 0; i < validacao.length; i++) {%>
-                    <div class="alert alert-danger alert-dismissable">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        <a href="#" class="alert-link">Erro:</a>.<%= validacao[i].msg %>
-                    </div>
-                <% } %>
+                
                 <div class="box box-widget widget-user-2">
                         
                     <!-- Add the bg color to the header using any of the bg-* classes -->
@@ -70,21 +65,57 @@
                         <h3 class="widget-user-username">wsPDV - Versão 2.1</h3>
                         <h5 class="widget-user-desc">Wavii Consultoria e Sistemas Ltda</h5>
                     </div>
+                    
                     <div class="box-footer no-padding">
+
                         <div class="col-md-12">
+                            
+                            <% for(var i = 0; i < validacao.length; i++) {%>
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <a href="#" class="alert-link">Erro:</a>.<%= validacao[i].msg %>
+                                </div>
+                            <% } %>
                             <!-- Box Comment -->
-                            <a class="btn btn-link" href="/Solicitar Conta" style="color:rgb(0, 0, 0);" accesskey="S"><i class="fa fa-calculator"></i> <u>S</u>olicitar Conta</a>                                     
+                            <a class="btn btn-link" href="/Solicitar Conta" style="color:rgb(0, 0, 0);" accesskey="S" data-toggle="modal" data-target="#modal-conta-<%= idVenda %>"><i class="fa fa-calculator"></i> <u>S</u>olicitar Conta</a>                                     
                 
                             <a class="btn btn-link" href="/comanda" style="color:rgb(0, 0, 0);" accesskey="C"><i class="fa fa-exchange"></i> <u>T</u>ransferência</a>                                     
                 
                             <a class="btn btn-link" href="/salao" style="color:rgb(0, 0, 0);" accesskey="V"><i class="fa fa-mail-reply"></i> <u>V</u>oltar</a>                                     
-                
+                            <div class="modal fade" id="modal-conta-<%= idVenda %>"">
+                                <div class="modal-dialog">
+                                    <form role="form" action="/solicitarConta/<%= idVenda %>" method="post">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title">Solicitação de Conta</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        
+                                                    </div>
+                                                </div>  
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/itens/<%= idVenda %>'">Cancelar</button>
+                                                <button type="submit" class="btn btn-primary">Solicitar</button>
+                                            </div>
+                                            
+                                        </div>
+                                    </form>
+                                    <!-- /.modal-content -->
+                                </div>
+                            <!-- /.modal-dialog -->
+                            </div>
                             <div class="box box-widget">
                                 <div class="box-header with-border">
                                     <div class="user-block">
                                         <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
-                                        <span class="username"><a href="#">Lucas Ricarte</a></span>
-                                        <span class="description">MESA 01</span>
+                                        <span class="username"><a href="#"><%= funcionarios[0].nome %></a></span>
+                                        <span class="description"><%= mesas[0].nome %></span>
     
                                     </div>
                                         <!-- /.user-block -->
@@ -97,12 +128,19 @@
                               
                                 <div class="box-body">
 
-                                    <a class="btn btn-app">
+                                    <a class="btn btn-app" href="/itens/<%= idVenda %>">
                                         <i class="fa fa-filter"></i> Todos
+                                        <span class="badge bg-green"><%= produtos.length%></span>
                                     </a>
                                     <% for( var i = 0; i < categorias.length; i++ ) { %>
-                                        <a class="btn btn-app">
-                                                <span class="badge bg-yellow">3</span>
+                                        <a class="btn btn-app" href="/itensCategoria/<%= idVenda + '&&' + categorias[i].id %>">
+                                            <% var qdeCategoria = 0; %>
+                                            <% for( var p = 0; p < produtos.length; p++ ) { %>
+                                                <% if( categorias[i].id == produtos[p].categoria ) {%>
+                                                <% qdeCategoria += 1; %>
+                                                <% } %>
+                                            <% } %>
+                                                <span class="badge bg-yellow"><%= qdeCategoria %></span>
                                             <%= categorias[i].nome %>
                                         </a>
                                     <% } %>
@@ -112,7 +150,7 @@
                         </div>                        
                     </div>   
                     <div class="box-footer no-padding">
-                        <div class="col-md-9">
+                        <div class="col-md-12">
                             <!-- Box Comment -->
                             <div class="box box-widget">
                                 <div class="box-header with-border">
@@ -132,100 +170,77 @@
                                 <div class="box-body">
                                         
                                         <% for( var i = 0; i < produtos.length; i++ ) { %>
-                                            <a class="btn btn-app" data-toggle="modal" data-target="#modal-item-<%= produtos[i].id %>">
-                                                <%= produtos[i].nome %></br><b>R$ <%= produtos[i].preco.toFixed(2) %></b>
-                                            </a>
-                                            <div class="modal fade" id="modal-item-<%= produtos[i].id %>">
-                                                <div class="modal-dialog">
-                                                    <form role="form" action="/incluirItens/<%= idVenda %>" method="post">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                                <h4 class="modal-title">Adicionar Item:<%= produtos[i].nome %></h4>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="container-fluid">
-                                                                    <div class="row">
-                                                                        <div class="form-group col-lg-2" >
-                                                                            <label>Id:</label>
-                                                                            <input type="text" class="form-control" name="movimento"  required="true" readonly="true" value="<%= idVenda %>">
-                                                                        </div>
-                                                                        <div class="form-group col-lg-4" >
-                                                                            <label>Produto:</label>
-                                                                            <select class="form-control" required="true" name="produto" required="true" readonly="true">
-                                                                                <% for(var e=0; e < produtos.length; e++) {%>
-                                                                                    <% if( produtos[i].id == produtos[e].id ) { %>
-                                                                                    <option value="<%= produtos[e].id %>"><%= produtos[e].nome %></option>
-                                                                                    <% } %>
-                                                                                <% } %>
-                                                                            </select>
-                                                                        </div>
-                                                                        <div class="form-group col-lg-2" >
-                                                                            <label>Quantidade:</label>
-                                                                            <input type="number" class="form-control" name="quantidade" value="" required="true" autofocus="autofocus">
-                                                                        </div>
-                                                                        <div class="form-group col-lg-2" >
-                                                                            <label>Unitário:</label>
-                                                                            <input type="text" class="form-control" name="unitario" value="<%= produtos[i].preco.toFixed(2) %>" required="true" readonly="true">
-                                                                        </div>
-
-                                                                        <div class="form-group col-lg-2" >
-                                                                            <label>Total:</label>
-                                                                            <input type="text" class="form-control" name="total" value="<%= produtos[i].total > 0 ? produtos[i].total.toFixed(2) : 0 %>" required="true" readonly="true">
-                                                                        </div>
+                                            <% for( var c = 0; c < categorias.length; c++ ) { %>
+                                                <% if( produtos[i].categoria == categorias[c].id ) { %>
+                                                    <a class="btn btn-app" data-toggle="modal" data-target="#modal-item-<%= produtos[i].id %>">
+                                                        <%= produtos[i].nome %></br><b>R$ <%= produtos[i].preco.toFixed(2) %></b>
+                                                        <span class="badge <%= produtos[i].estoque > 0 ? 'bg-green' : 'bg-yellow' %>">Estoque: <%= produtos[i].estoque %></span>
+                                                    </a>
+                                                    <div class="modal fade" id="modal-item-<%= produtos[i].id %>">
+                                                        <div class="modal-dialog">
+                                                            <form role="form" action="/incluirItens/<%= idVenda %>" method="post">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                            <span aria-hidden="true">&times;</span>
+                                                                        </button>
+                                                                        <h4 class="modal-title">Adicionar Item:<%= produtos[i].nome %></h4>
                                                                     </div>
-                                                                </div>  
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/itens/<%= idVenda %>'">Cancelar</button>
-                                                                <button type="submit" class="btn btn-primary">Adicionar</button>
-                                                            </div>
-                                                            
+                                                                    <div class="modal-body">
+                                                                        <div class="container-fluid">
+                                                                            <div class="row">
+                                                                                <div class="form-group col-lg-2" >
+                                                                                    <label>Id:</label>
+                                                                                    <input type="text" class="form-control" name="movimento"  required="true" readonly="true" value="<%= idVenda %>">
+                                                                                </div>
+                                                                                <div class="form-group col-lg-4" >
+                                                                                    <label>Produto:</label>
+                                                                                    <select class="form-control" required="true" name="produto" required="true" readonly="true">
+                                                                                        <% for(var e=0; e < produtos.length; e++) {%>
+                                                                                            <% if( produtos[i].id == produtos[e].id ) { %>
+                                                                                            <option value="<%= produtos[e].id %>"><%= produtos[e].nome %></option>
+                                                                                            <% } %>
+                                                                                        <% } %>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="form-group col-lg-2" >
+                                                                                    <label>Quantidade:</label>
+                                                                                    <input type="number" class="form-control" name="quantidade" value="" required="true" autofocus="autofocus">
+                                                                                </div>
+                                                                                <div class="form-group col-lg-2" >
+                                                                                    <label>Unitário:</label>
+                                                                                    <input type="text" class="form-control" name="unitario" value="<%= produtos[i].preco.toFixed(2) %>" required="true" readonly="true">
+                                                                                </div>
+
+                                                                                <div class="form-group col-lg-2" >
+                                                                                    <label>Total:</label>
+                                                                                    <input type="text" class="form-control" name="total" value="<%= produtos[i].total > 0 ? produtos[i].total.toFixed(2) : 0 %>" required="true" readonly="true">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>  
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="reset" class="btn btn-default pull-left" onclick="window.location.href='/itens/<%= idVenda %>'">Cancelar</button>
+                                                                        <button type="submit" class="btn btn-primary">Adicionar</button>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                            </form>
+                                                            <!-- /.modal-content -->
                                                         </div>
-                                                    </form>
-                                                    <!-- /.modal-content -->
-                                                </div>
-                                            <!-- /.modal-dialog -->
-                                            </div>
+                                                    <!-- /.modal-dialog -->
+                                                    </div>
+                                                <% } %>
+                                            <% } %>
                                         <% } %>
                                        
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
-                            <!-- Box Comment -->
-                            <div class="box box-widget">
-                                <div class="box-header with-border">
-                                    <div class="user-block">
-                                        <span class="username"><a href="#">Total</a></span>
-                                        <span class="description">DAN SPETUS</span>
-                                    </div>
-                                        <!-- /.user-block -->
-                                    <div class="box-tools">
-                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                                    </div>
-                                    <!-- /.box-tools -->
-                                </div>
-                                <% var quantidade =0; var total = 0;%>
-                                <% for( var i = 0; i < itens.length; i++ ) { %>
-                                    <% quantidade += itens[i].quantidade %>
-                                    <% total += itens[i].total %>
-                                    
-                                <% } %>
-                                <!-- /.box-header -->
-                                <div class="box-body">
-                                    <ul class="nav nav-stacked">
-                                        <li><a href="#">Itens:<span class="pull-right badge bg-yellow"><%= quantidade %></span></a></li>
-                                        <li><a href="#">Total:<span class="pull-right badge bg-green"><%= total.toFixed(2) %></span></a></li>
-                                    </ul>                  
-                                </div>
-                            </div>
-                        </div>                         
+                                               
                     </div>
                     <div class="box-footer no-padding">
-                        <div class="col-md-12">
+                        <div class="col-md-9">
                             <!-- Box Comment -->
                             <div class="box box-widget">
                                 <div class="box-header with-border">
@@ -249,25 +264,72 @@
                                                 <th>Quantidade</th>
                                                 <th>Unitário</th>
                                                 <th>Total</th>
-                                                <th></th>
+                                                <th>Ação</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <% for( var i = 0; i < itens.length; i++ ) { %>
                                                 <tr>
-                                                    <th>
-                                                        <% for(var e=0; e < produtos.length; e++) {%>
-                                                            <% if( itens[i].produto== produtos[e].id ) { %>
-                                                                <%= produtos[e].nome  %>
+                                                    <td>
+                                                        <% if( itens[i].cancelamento ) { %>
+                                                            <p class="text-red"><b>
+                                                            <% for(var e=0; e < produtos.length; e++) {%>
+                                                                <% if( itens[i].produto== produtos[e].id ) { %>
+                                                                    <%= produtos[e].nome  %> -CANCELADO
+                                                                <% } %>
+                                                            <% } %>
+                                                            </b>
+                                                            </p>
+                                                        <% } else { %>
+                                                            <% for(var e=0; e < produtos.length; e++) {%>
+                                                                <% if( itens[i].produto== produtos[e].id ) { %>
+                                                                    <%= produtos[e].nome  %>
+                                                                <% } %>
                                                             <% } %>
                                                         <% } %>
-                                                        
-                                                    </th>
-                                                    <th><%= itens[i].quantidade %></th>
-                                                    <th><%= itens[i].unitario.toFixed(2)  %></th>
-                                                    <th><%= itens[i].total.toFixed(2)  %></th>
-                                                    <th></th>
+                                                    </td>
+                                                    <td><%= itens[i].quantidade %></td>
+                                                    <td><%= itens[i].unitario.toFixed(2)  %></td>
+                                                    <td><%= itens[i].total.toFixed(2)  %></td>
+                                                    
+                                                    <td>
+                                                        <% if( !itens[i].cancelamento ) { %>
+                                                        <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-remove-<%= itens[i].id %>"><i class="fa fa-remove"></i></button>
+                                                        <% } %>
+                                                    </td>
                                                 </tr>
+                                                <!-- Excluir Registro -->
+                                                <div class="modal modal-danger fade" id="modal-remove-<%= itens[i].id %>">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                                <h4 class="modal-title">Excluir Registro</h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <% for(var e=0; e < produtos.length; e++) {%>
+                                                                    <% if( itens[i].produto== produtos[e].id ) { %>
+                                                                        <p>Deseja deletar o <%= produtos[e].nome  %> da mesa?</p>
+                                                                    <% } %>
+                                                                <% } %>
+                                                                
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a class="btn btn-outline pull-left"  data-dismiss="modal" href="/itens/<%= idVenda %>">
+                                                                    Cancelar
+                                                                </a>
+                                                                <a class="btn btn-outline" href="/cancelarItens/<%=  itens[i].id + '&&' +  idVenda %>">
+                                                                    Excluir
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                        <!-- /.modal-content -->
+                                                    </div>
+                                                    <!-- /.modal-dialog -->
+                                                </div>
+                                                <!-- /.modal -->
                                                 
                                             <% } %>
                                         </tbody>
@@ -285,6 +347,37 @@
                                 </div>
                             </div>
                         </div>   
+                        <div class="col-md-3">
+                            <!-- Box Comment -->
+                            <div class="box box-widget">
+                                <div class="box-header with-border">
+                                    <div class="user-block">
+                                        <span class="username"><a href="#">Total</a></span>
+                                        <span class="description">DAN SPETUS</span>
+                                    </div>
+                                        <!-- /.user-block -->
+                                    <div class="box-tools">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    </div>
+                                    <!-- /.box-tools -->
+                                </div>
+                                <% var quantidade =0; var total = 0;%>
+                                <% for( var i = 0; i < itens.length; i++ ) { %>
+                                    <% if( !itens[i].cancelamento ) { %>
+                                    <% quantidade += itens[i].quantidade %>
+                                    <% total += itens[i].total %>
+                                    <% } %>
+                                    
+                                <% } %>
+                                <!-- /.box-header -->
+                                <div class="box-body">
+                                    <ul class="nav nav-stacked">
+                                        <li><a href="#">Itens:<span class="pull-right badge bg-yellow"><%= quantidade %></span></a></li>
+                                        <li><a href="#">Total:<span class="pull-right badge bg-green"><%= total.toFixed(2) %></span></a></li>
+                                    </ul>                  
+                                </div>
+                            </div>
+                        </div>  
                     </div>
                 </div>
             </section>            

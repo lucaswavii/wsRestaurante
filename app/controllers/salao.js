@@ -1,10 +1,10 @@
 module.exports.index = function( application, req, res ){
 
     var connection = application.config.dbConnection();
-    var MesaDao = new application.app.models.MesaDAO(connection);
     var caixaDao = new application.app.models.CaixaDAO(connection);
     var pdvDao = new application.app.models.PdvDAO(connection);
     var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
+    var MesaDao = new application.app.models.MesaDAO(connection);
     var salaoDao = new application.app.models.SalaoDAO(connection);
     var clienteDao = new application.app.models.ClienteDAO(connection);
     
@@ -73,15 +73,33 @@ module.exports.itens = function( application, req, res ){
     var categoriaDao = new application.app.models.CategoriaDAO(connection);     
     var produtosDao = new application.app.models.ProdutoDAO(connection); 
     var itemDao = new application.app.models.ItensDAO(connection); 
+    var salaoDao = new application.app.models.SalaoDAO(connection);        
+    var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
+    var MesaDao = new application.app.models.MesaDAO(connection);
+    
         
-    var idVenda = req.params._id
-    itemDao.listar( idVenda, function(error, itens ){
-        categoriaDao.listar(function(error, categorias ){
-            produtosDao.listar(function(error, produtos ){
-                res.render('itens', { validacao: {},  idVenda: idVenda, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
-            });
+    var idVenda = req.params._id;
+    
+    salaoDao.editar(idVenda, function(error, saloes){
+
+        funcionarioDao.editar(saloes[0].atendente, function(error, funcionarios){
+
+            MesaDao.editar(saloes[0].mesa, function(error, mesas){
+
+                itemDao.listar( idVenda, function(error, itens ){
+
+                    categoriaDao.listar(function(error, categorias ){
+                    
+                        produtosDao.listar(function(error, produtos ){
+                    
+                            connection.end(); 
+                            res.render('itens', { validacao: {},  idVenda: idVenda, itens:itens, categorias:categorias, produtos:produtos, saloes:saloes, mesas:mesas, funcionarios: funcionarios, sessao: {} });
+                        });
+                    });
+                }); 
+            });  
         });
-    });    
+    });
 }
 
 module.exports.incluirItens = function( application, req, res ){
@@ -89,11 +107,94 @@ module.exports.incluirItens = function( application, req, res ){
     var idVenda = req.params._id
     var connection = application.config.dbConnection();    
     var itemDao = new application.app.models.ItensDAO(connection); 
-
-    dadosForms.total = dadosForms.quantidade * dadosForms.unitario
-    itemDao.salvar( dadosForms, function(error, itens ){
-        console.log(error)
-        res.redirect("/itens/" + idVenda )
+    var produtosDao = new application.app.models.ProdutoDAO(connection); 
+    var categoriaDao = new application.app.models.CategoriaDAO(connection);  
+    var salaoDao = new application.app.models.SalaoDAO(connection);        
+    
+    salaoDao.editar(idVenda, function(error, salao){
+    
+        dadosForms.total = dadosForms.quantidade * dadosForms.unitario
+        produtosDao.editar( dadosForms.produto, function(error, produtos ){
+            if( produtos[0].estoque >= dadosForms.quantidade ) { 
+                
+                produtos[0].estoque -= dadosForms.quantidade;
+                
+                itemDao.salvar( dadosForms, function(error, itens ){
+                    produtosDao.salvar( produtos[0], function(error, produtos ){
+                        connection.end(); 
+                        res.redirect("/itens/" + idVenda ) 
+                    });
+                });
+            } else {
+                var msg = "O produto " + produtos[0].nome + " não possui estoque para atender esta demanda.";
+                itemDao.listar( idVenda, function(error, itens ){
+                    categoriaDao.listar(function(error, categorias ){
+                        produtosDao.listar(function(error, produtos ){
+                            connection.end(); 
+                            res.render('itens', { validacao: [{'msg': msg}],  idVenda: idVenda, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
+                        });
+                    });
+                });    
+            }
+            
+        });
     });
-
 }
+
+module.exports.cancelarItens = function( application, req, res ){
+
+    var params = req.params._id
+    var idItem = params.split('&&')[0];
+    var idVenda = params.split('&&')[1];
+
+    var connection = application.config.dbConnection();    
+    var itemDao = new application.app.models.ItensDAO(connection); 
+    var produtosDao = new application.app.models.ProdutoDAO(connection); 
+    var salaoDao = new application.app.models.SalaoDAO(connection);        
+    
+    salaoDao.editar(idVenda, function(error, salao){
+    
+        itemDao.editar(idItem, function(error, itens ){
+            itens[0].cancelamento = new Date();
+            itens[0].cancelador   = 1; // Incluir a sessão do usuário funcionario
+            itens[0].total = 0;
+            produtosDao.editar( itens[0].produto, function(error, produtos ){
+                
+                produtos[0].estoque += itens[0].quantidade;
+
+                produtosDao.salvar( produtos[0], function(error, produtos ){});
+                itemDao.salvar( itens[0], function(error, itens ){
+                    console.log(error)
+                    connection.end(); 
+                    res.redirect("/itens/" + idVenda ) 
+                });
+            });
+            
+        });
+    });
+}
+
+module.exports.itensCategoria = function( application, req, res ){
+
+    var params = req.params._id
+    var idCategoria = params.split('&&')[1];
+    var idVenda = params.split('&&')[0];
+
+    var connection = application.config.dbConnection();
+    var categoriaDao = new application.app.models.CategoriaDAO(connection);     
+    var produtosDao = new application.app.models.ProdutoDAO(connection); 
+    var itemDao = new application.app.models.ItensDAO(connection); 
+    var salaoDao = new application.app.models.SalaoDAO(connection);        
+    
+    salaoDao.editar(idVenda, function(error, salao){
+        itemDao.listar( idVenda, function(error, itens ){
+            categoriaDao.editar(idCategoria, function(error, categorias ){
+                produtosDao.listar(function(error, produtos ){
+                    connection.end(); 
+                    res.render('itens', { validacao: {},  idVenda: idVenda, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
+                });
+            });
+        });  
+    }); 
+}
+

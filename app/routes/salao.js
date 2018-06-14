@@ -15,4 +15,12 @@ module.exports = function(application){
     application.post('/incluirItens/:_id', function(req, res){
         application.app.controllers.salao.incluirItens(application, req, res);
     });
+
+    application.get('/cancelarItens/:_id', function(req, res){
+        application.app.controllers.salao.cancelarItens(application, req, res);
+    });
+
+    application.get('/itensCategoria/:_id', function(req, res){
+        application.app.controllers.salao.itensCategoria(application, req, res);
+    });
 }

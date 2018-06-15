@@ -2,8 +2,8 @@ function PagamentoDAO( connection ){
 	this._connection = connection; 
 }
 
-PagamentoDAO.prototype.listar = function( callback) {
-	this._connection.query('select * from PAGAMENTO order by id', callback);	
+PagamentoDAO.prototype.listar = function( idVenda, callback) {
+	this._connection.query('select * from PAGAMENTO where movimento = ?  order by id', idVenda, callback);	
 }
 
 PagamentoDAO.prototype.salvar = function( pagamento, callback) {	

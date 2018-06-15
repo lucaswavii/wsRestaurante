@@ -24,7 +24,7 @@ module.exports.index = function( application, req, res ){
 
         if( rta == undefined ) {            
             connection.end();
-            res.render('pdv', { validacao : [{'msg': 'O caixa não pode ser aberto! Configure o caixa com o ip ' + ip + '.'}], caixa: rta,  caixa: {}, pdvs : {}, funcionarios:{}, sessao: {} });
+            res.render('pdv', { validacao : [{'msg': 'O caixa não pode ser aberto! Configure o caixa com o ip ' + ip + '.'}], caixa: rta,  caixa: {}, pdvs : {}, empresas:{}, funcionarios:{}, sessao: {} });
         } else {
             
             funcionarioDao.listar(function(error, funcionarios ){

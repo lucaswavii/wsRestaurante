@@ -14,7 +14,7 @@ module.exports.index = function( application, req, res ){
     caixaDao.listar(function(error, caixas ){
         if( error ) {
             
-            res.render('pdv', { validacao : {}, caixa: rta, caixa: {}, pdvs : {}, funcionarios:{}, sessao: {} });
+            res.render('pdv', { validacao : [{'msg': 'O caixa não pode ser aberto! Configure o caixa com o ip ' + ip + '.'}], caixa: rta, caixas: {}, pdvs : {}, empresas: {}, funcionarios: {}, sessao: {} });
             return;
         }	    
 
@@ -25,7 +25,7 @@ module.exports.index = function( application, req, res ){
 
         if( rta == undefined ) {            
             connection.end();
-            res.render('pdv', { validacao : [{'msg': 'O caixa não pode ser aberto! Configure o caixa com o ip ' + ip + '.'}], caixa: rta,  caixa: {}, pdvs : {}, funcionarios:{}, sessao: {} });
+            res.render('pdv', { validacao : [{'msg': 'O caixa não pode ser aberto! Configure o caixa com o ip ' + ip + '.'}], caixa: rta, caixas: {}, pdvs : {}, empresas: {}, funcionarios: {}, sessao: {} });
         } else {
             clienteDao.listar(function(error, clientes ){
                 pdvDao.listar(rta, function(error, pdvs ){
@@ -80,29 +80,32 @@ module.exports.itens = function( application, req, res ){
     var MesaDao = new application.app.models.MesaDAO(connection);
     var condicaoPagamentoDao = new application.app.models.CondicaoPagamentoDAO(connection);
     var pagamentoDao = new application.app.models.PagamentoDAO(connection);
-    
-    condicaoPagamentoDao.listar(function(error, condicaoPagamentos){
 
-        pagamentoDao.listar(idVenda, function(error, pagamentos){
+    pagamentoDao.listar( idVenda, function(error, pagamentos ){ 
 
-            salaoDao.editar(idVenda, function(error, saloes){
+        condicaoPagamentoDao.listar(function(error, condicaoPagamentos){
 
-                funcionarioDao.editar(saloes[0].atendente, function(error, funcionarios){
+            pagamentoDao.listar(idVenda, function(error, pagamentos){
 
-                    MesaDao.editar(saloes[0].mesa, function(error, mesas){
+                salaoDao.editar(idVenda, function(error, saloes){
 
-                        itemDao.listar( idVenda, function(error, itens ){
+                    funcionarioDao.editar(saloes[0].atendente, function(error, funcionarios){
 
-                            categoriaDao.listar(function(error, categorias ){
-                            
-                                produtosDao.listar(function(error, produtos ){
-                            
-                                    connection.end(); 
-                                    res.render('itens', { validacao: {},  idVenda: idVenda, pagamentos:pagamentos, condicaoPagamentos:condicaoPagamentos, itens:itens, categorias:categorias, produtos:produtos, saloes:saloes, mesas:mesas, funcionarios: funcionarios, sessao: {} });
+                        MesaDao.editar(saloes[0].mesa, function(error, mesas){
+
+                            itemDao.listar( idVenda, function(error, itens ){
+
+                                categoriaDao.listar(function(error, categorias ){
+                                
+                                    produtosDao.listar(function(error, produtos ){
+                                
+                                        connection.end(); 
+                                        res.render('itens', { validacao: {},  idVenda: idVenda, pagamentos:pagamentos, condicaoPagamentos:condicaoPagamentos, itens:itens, categorias:categorias, produtos:produtos, saloes:saloes, mesas:mesas, funcionarios: funcionarios, sessao: {} });
+                                    });
                                 });
-                            });
-                        }); 
-                    });  
+                            }); 
+                        });  
+                    });
                 });
             });
         });
@@ -129,37 +132,40 @@ module.exports.incluirItens = function( application, req, res ){
     var condicaoPagamentoDao = new application.app.models.CondicaoPagamentoDAO(connection);
     var pagamentoDao = new application.app.models.PagamentoDAO(connection);
     
-    
-    condicaoPagamentoDao.listar(function(error, condicaoPagamentos){
+       
+    pagamentoDao.listar( idVenda, function(error, pagamentos ){ 
+   
+        condicaoPagamentoDao.listar(function(error, condicaoPagamentos){
 
-        salaoDao.editar(idVenda, function(error, salao){
-        
-            dadosForms.total = dadosForms.quantidade * dadosForms.unitario
+            salaoDao.editar(idVenda, function(error, salao){
             
-            produtosDao.editar( dadosForms.produto, function(error, produtos ){
-            
-                if( produtos[0].estoque >= dadosForms.quantidade ) { 
-                    
-                    produtos[0].estoque -= dadosForms.quantidade;
-                    
-                    itemDao.salvar( dadosForms, function(error, itens ){
-                        produtosDao.salvar( produtos[0], function(error, produtos ){
-                            connection.end(); 
-                            res.redirect("/itens/" + idVenda ) 
-                        });
-                    });
-                } else {
-                    var msg = "O produto " + produtos[0].nome + " não possui estoque para atender esta demanda.";
-                    itemDao.listar( idVenda, function(error, itens ){
-                        categoriaDao.listar(function(error, categorias ){
-                            produtosDao.listar(function(error, produtos ){
+                dadosForms.total = dadosForms.quantidade * dadosForms.unitario
+                
+                produtosDao.editar( dadosForms.produto, function(error, produtos ){
+                
+                    if( produtos[0].estoque >= dadosForms.quantidade ) { 
+                        
+                        produtos[0].estoque -= dadosForms.quantidade;
+                        
+                        itemDao.salvar( dadosForms, function(error, itens ){
+                            produtosDao.salvar( produtos[0], function(error, produtos ){
                                 connection.end(); 
-                                res.render('itens', { validacao: [{'msg': msg}],  idVenda: idVenda, condicaoPagamentos:condicaoPagamentos, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
+                                res.redirect("/itens/" + idVenda ) 
                             });
                         });
-                    });    
-                }
-                
+                    } else {
+                        var msg = "O produto " + produtos[0].nome + " não possui estoque para atender esta demanda.";
+                        itemDao.listar( idVenda, function(error, itens ){
+                            categoriaDao.listar(function(error, categorias ){
+                                produtosDao.listar(function(error, produtos ){
+                                    connection.end(); 
+                                    res.render('itens', { validacao: [{'msg': msg}],  idVenda: idVenda, pagamentos:pagamentos, condicaoPagamentos:condicaoPagamentos, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
+                                });
+                            });
+                        });    
+                    }
+                    
+                });
             });
         });
     });
@@ -218,28 +224,32 @@ module.exports.itensCategoria = function( application, req, res ){
     var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
     var MesaDao = new application.app.models.MesaDAO(connection);
     var condicaoPagamentoDao = new application.app.models.CondicaoPagamentoDAO(connection);
+    var pagamentoDao = new application.app.models.PagamentoDAO(connection);
     
-    condicaoPagamentoDao.listar(function(error, condicaoPagamentos){
+    pagamentoDao.listar( idVenda, function(error, pagamentos ){  
 
-        salaoDao.editar(idVenda, function(error, saloes){
+        condicaoPagamentoDao.listar(function(error, condicaoPagamentos){
 
-            funcionarioDao.editar(saloes[0].atendente, function(error, funcionarios){
+            salaoDao.editar(idVenda, function(error, saloes){
 
-                MesaDao.editar(saloes[0].mesa, function(error, mesas){
+                funcionarioDao.editar(saloes[0].atendente, function(error, funcionarios){
 
-                    salaoDao.editar(idVenda, function(error, salao){
+                    MesaDao.editar(saloes[0].mesa, function(error, mesas){
 
-                        itemDao.listar( idVenda, function(error, itens ){
-                        
-                            categoriaDao.editar(idCategoria, function(error, categorias ){
-                        
-                                produtosDao.listar(function(error, produtos ){
-                                    connection.end(); 
-                                    res.render('itens', { validacao: {},  idVenda: idVenda, mesas:mesas, condicaoPagamentos:condicaoPagamentos,  funcionarios:funcionarios, saloes:saloes, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
+                        salaoDao.editar(idVenda, function(error, salao){
+
+                            itemDao.listar( idVenda, function(error, itens ){
+                            
+                                categoriaDao.editar(idCategoria, function(error, categorias ){
+                            
+                                    produtosDao.listar(function(error, produtos ){
+                                        connection.end(); 
+                                        res.render('itens', { validacao: {},  idVenda: idVenda, pagamentos:pagamentos, mesas:mesas, condicaoPagamentos:condicaoPagamentos,  funcionarios:funcionarios, saloes:saloes, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
+                                    });
                                 });
-                            });
-                        });  
-                    }); 
+                            });  
+                        }); 
+                    });
                 });
             });
         });
@@ -258,6 +268,58 @@ module.exports.solicitarConta = function( application, req, res ){
     var salaoDao = new application.app.models.SalaoDAO(connection);        
     var condicaoPagamentoDao = new application.app.models.CondicaoPagamentoDAO(connection);
     var pagamentoDao = new application.app.models.PagamentoDAO(connection);
-    
+    var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
+    var MesaDao = new application.app.models.MesaDAO(connection);
+
+    if( dadosForms.valor > dadosForms.total  ) {
+        var msg = "O valor pago é maior que o valor total.";
+        pagamentoDao.listar( idVenda, function(error, pagamentos ){   
+
+            condicaoPagamentoDao.listar(function(error, condicaoPagamentos){
+
+                salaoDao.editar(idVenda, function(error, saloes){
+        
+                    funcionarioDao.editar(saloes[0].atendente, function(error, funcionarios){
+        
+                        MesaDao.editar(saloes[0].mesa, function(error, mesas){
+        
+                            salaoDao.editar(idVenda, function(error, salao){
+        
+                                itemDao.listar( idVenda, function(error, itens ){
+                                
+                                    categoriaDao.editar(idCategoria, function(error, categorias ){
+                                
+                                        produtosDao.listar(function(error, produtos ){
+                                            connection.end(); 
+                                            res.render('itens', { validacao: [{'msg': msg}],  idVenda: idVenda, pagamentos:pagamentos, mesas:mesas, condicaoPagamentos:condicaoPagamentos,  funcionarios:funcionarios, saloes:saloes, itens:itens, categorias:categorias, produtos:produtos, sessao: {} });
+                                        });
+                                    });
+                                });  
+                            }); 
+                        });
+                    });
+                });
+            });
+        });
+
+    } else {
+        var pagamento = { movimento:idVenda, condpagamento: dadosForms.condpagamento, valor: dadosForms.valor };
+
+        pagamentoDao.salvar( pagamento, function(error, pagamentos ){
+            
+            itemDao.listar( idVenda, function(error, itens ){
+                for (var index = 0; index < itens.length; index++) {
+                    
+                    itens[index].bloqueio = 'S';
+''
+                    itemDao.salvar( itens[index], function(error, itens ){});
+                }
+                
+            });
+            connection.end(); 
+            res.redirect("/itens/" + idVenda ) 
+        });
+        
+    }
     
 }

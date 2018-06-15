@@ -78,15 +78,19 @@
                                         <h3 class="widget-user-username">CAIXA ABERTO!</h3>
                                         <h5 class="widget-user-desc">Seja Bem Vindo!</h5>
                                     </div>
+                                    <div class="box-footer no-padding">
+                                    
+                                    </div>
                                 <% } else { %>
                                     <div class="widget-user-header bg-red">
                                         <h3 class="widget-user-username">Dirija-se ao próximo caixa.</h3>
                                         <h5 class="widget-user-desc">Caixa Fechado!</h5>
                                     </div>
-                                <% } %>
                                     <div class="box-footer no-padding">
-                                            <img class="img-responsive pad" src="../images/backgroudpdv.png" alt="Photo">                      
+                                        <img class="img-responsive pad" src="../images/backgroudpdv.png" alt="Photo">                      
                                     </div>
+                                <% } %>
+                                    
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -108,7 +112,9 @@
                                     <% } else { %>
                                         <div class="widget-user-header bg-red">
                                             <div class="widget-user-image">
-                                                <img class="img-circle" src="../images/vendas-pdv.png" alt="User Avatar">
+                                                <div class="box-body">
+                                                RECEBIMENTOS:
+                                                </div>
                                             </div>
                                                 <!-- /.widget-user-image -->
                                             <h3 class="widget-user-username">Caixa Fechado</h3>

@@ -8,6 +8,7 @@ module.exports.index = function( application, req, res ){
     var pdvDao = new application.app.models.PdvDAO(connection);
     var funcionarioDao = new application.app.models.FuncionarioDAO(connection);
     var empresaDao = new application.app.models.EmpresaDAO(connection);
+    var pagamentoDao = new application.app.models.PagamentoDAO(connection);
 
     caixaDao.listar(function(error, caixas ){
         
@@ -26,18 +27,20 @@ module.exports.index = function( application, req, res ){
             connection.end();
             res.render('pdv', { validacao : [{'msg': 'O caixa não pode ser aberto! Configure o caixa com o ip ' + ip + '.'}], caixa: rta,  caixa: {}, pdvs : {}, empresas:{}, funcionarios:{}, sessao: {} });
         } else {
-            
-            funcionarioDao.listar(function(error, funcionarios ){
-                pdvDao.listar(rta, function(error, pdvs ){
-                    empresaDao.editar( rta.empresa, function(error, empresas){
-                        if( error ) {
-                            
-                            res.render('pdv', { validacao : error, caixa: rta, caixas: caixas, empresas: empresas, pdvs : {}, funcionarios: funcionarios, sessao: {} });
-                            return;
-                        }
-                        console.log(rta)
-                        connection.end();
-                        res.render('pdv', { validacao : {}, caixa: rta, caixas: caixas, pdvs : pdvs, empresas: empresas, funcionarios: funcionarios, sessao: {} });
+            pagamentoDao.pendentes( function(error, pagamentos ){
+
+                funcionarioDao.listar(function(error, funcionarios ){
+                    pdvDao.listar(rta, function(error, pdvs ){
+                        empresaDao.editar( rta.empresa, function(error, empresas){
+                            if( error ) {
+                                
+                                res.render('pdv', { validacao : error, caixa: rta, caixas: caixas, empresas: empresas, pdvs : {}, pagamentos:pagamentos, funcionarios: funcionarios, sessao: {} });
+                                return;
+                            }
+                        
+                            connection.end();
+                            res.render('pdv', { validacao : {}, pagamentos:pagamentos, caixa: rta, caixas: caixas, pdvs : pdvs, empresas: empresas, funcionarios: funcionarios, sessao: {} });
+                        });
                     });
                 });
             });
@@ -54,10 +57,9 @@ module.exports.abertura = function( application, req, res ){
     
     var connection = application.config.dbConnection();
     var pdvDao = new application.app.models.PdvDAO(connection);        
-    console.log(dadosForms)
+
     pdvDao.aberturaPdv(dadosForms, function(error, result){
         connection.end();   
-       console.log(error)
         res.redirect('/pdv');
     });
      

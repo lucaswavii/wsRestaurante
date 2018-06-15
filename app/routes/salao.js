@@ -23,4 +23,10 @@ module.exports = function(application){
     application.get('/itensCategoria/:_id', function(req, res){
         application.app.controllers.salao.itensCategoria(application, req, res);
     });
+
+    application.post('/solicitarConta/:_id', function(req, res){
+        application.app.controllers.salao.solicitarConta(application, req, res);
+    });
+
+    
 }

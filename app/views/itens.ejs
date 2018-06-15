@@ -67,8 +67,7 @@
                     </div>
                     
                     <div class="box-footer no-padding">
-
-                        <div class="col-md-12">
+                        <div class="col-md-4">
                             
                             <% for(var i = 0; i < validacao.length; i++) {%>
                                 <div class="alert alert-danger alert-dismissable">
@@ -78,11 +77,7 @@
                             <% } %>
                             <!-- Box Comment -->
                             <a class="btn btn-link" href="/Solicitar Conta" style="color:rgb(0, 0, 0);" accesskey="S" data-toggle="modal" data-target="#modal-conta-<%= idVenda %>"><i class="fa fa-calculator"></i> <u>S</u>olicitar Conta</a>                                     
-                
-                            <a class="btn btn-link" href="/comanda" style="color:rgb(0, 0, 0);" accesskey="C"><i class="fa fa-exchange"></i> <u>T</u>ransferência</a>                                     
-                
-                            <a class="btn btn-link" href="/salao" style="color:rgb(0, 0, 0);" accesskey="V"><i class="fa fa-mail-reply"></i> <u>V</u>oltar</a>                                     
-                            
+                            <a class="btn btn-link" href="#" style="color:rgb(0, 0, 0);"><i class="fa fa-print"></i> <u>I</u>mprimir</a>                                     
                             <% var quantidade =0; var total = 0;%>
                             <% for( var i = 0; i < itens.length; i++ ) { %>
                                 <% if( !itens[i].cancelamento ) { %>
@@ -100,10 +95,16 @@
                                                 </button>
                                                 <h4 class="modal-title">Solicitação de Conta</h4>
                                             </div>
+                                            <% var pagos = 0; %>
+                                            <% for( var i = 0; i < pagamentos.length; i++ ) { %>
+                                            
+                                                <% pagos += pagamentos[i].valor  %>
+                                                
+                                            <% } %>
                                             <div class="modal-body">
                                                 <div class="container-fluid">
                                                     <div class="row">
-                                                        <div class="form-group col-lg-6" >
+                                                        <div class="form-group col-lg-12" >
                                                             <label>Pagamento:</label>
                                                             <select class="form-control" required="true" name="condpagamento">
                                                               
@@ -118,6 +119,11 @@
                                                         <div class="form-group col-lg-6" >
                                                             <label>Total:</label>
                                                             <input type="text" class="form-control" name="total" value="<%= total.toFixed(2) %>" required="true" readonly="true">
+                                                        </div>
+
+                                                        <div class="form-group col-lg-6" >
+                                                            <label>Pago:</label>
+                                                            <input type="text" class="form-control" name="valor" value="<%= (total - pagos).toFixed(2) %>" required="true">
                                                         </div>
           
                                                     </div>
@@ -137,7 +143,7 @@
                             <div class="box box-widget">
                                 <div class="box-header with-border">
                                     <div class="user-block">
-                                        <img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">
+                                        <img class="img-circle" src="../images/opgarcom.png" alt="User Image">
                                         <span class="username"><a href="#"><%= funcionarios[0].nome %></a></span>
                                         <span class="description"><%= mesas[0].nome %></span>
     
@@ -171,11 +177,13 @@
                                                             
                                 </div>
                             </div>
-                        </div>                        
-                    </div>   
-                    <div class="box-footer no-padding">
-                        <div class="col-md-12">
+                        </div>     
+                        <div class="col-md-8">
                             <!-- Box Comment -->
+                            <a class="btn btn-link" href="/comanda" style="color:rgb(0, 0, 0);" accesskey="C"><i class="fa fa-exchange"></i> <u>T</u>ransferência</a>                                     
+                
+                            <a class="btn btn-link" href="/salao" style="color:rgb(0, 0, 0);" accesskey="V"><i class="fa fa-mail-reply"></i> <u>V</u>oltar</a>                                     
+                           
                             <div class="box box-widget">
                                 <div class="box-header with-border">
                                     <div class="user-block">
@@ -190,7 +198,7 @@
                                     <!-- /.box-tools -->
                                 </div>
                                 <!-- /.box-header -->
-                              
+                                
                                 <div class="box-body">
                                         
                                         <% for( var i = 0; i < produtos.length; i++ ) { %>
@@ -257,11 +265,14 @@
                                                 <% } %>
                                             <% } %>
                                         <% } %>
-                                       
+                                        
                                 </div>
                             </div>
                         </div>
-                                               
+                                                        
+                    </div>   
+                    <div class="box-footer no-padding">
+                                      
                     </div>
                     <div class="box-footer no-padding">
                         <div class="col-md-9">
@@ -304,6 +315,15 @@
                                                             <% } %>
                                                             </b>
                                                             </p>
+                                                        <% } else if( itens[i].bloqueio ) { %>
+                                                            <p class="text-green"><b>
+                                                            <% for(var e=0; e < produtos.length; e++) {%>
+                                                                <% if( itens[i].produto== produtos[e].id ) { %>
+                                                                    <%= produtos[e].nome  %>
+                                                                <% } %>
+                                                            <% } %>
+                                                            </b>
+                                                            </p>
                                                         <% } else { %>
                                                             <% for(var e=0; e < produtos.length; e++) {%>
                                                                 <% if( itens[i].produto== produtos[e].id ) { %>
@@ -317,7 +337,7 @@
                                                     <td><%= itens[i].total.toFixed(2)  %></td>
                                                     
                                                     <td>
-                                                        <% if( !itens[i].cancelamento ) { %>
+                                                        <% if( !itens[i].cancelamento &&  !itens[i].bloqueio) { %>
                                                         <button type="button" class="btn btn-danger btn-flat" data-toggle="modal" data-target="#modal-remove-<%= itens[i].id %>"><i class="fa fa-remove"></i></button>
                                                         <% } %>
                                                     </td>
@@ -396,8 +416,48 @@
                                 <!-- /.box-header -->
                                 <div class="box-body">
                                     <ul class="nav nav-stacked">
-                                        <li><a href="#">Itens:<span class="pull-right badge bg-yellow"><%= quantidade %></span></a></li>
-                                        <li><a href="#">Total:<span class="pull-right badge bg-green"><%= total.toFixed(2) %></span></a></li>
+                                        <li><a href="#">Itens:<span class="pull-right badge bg-blue"><%= quantidade %></span></a></li>
+                                        <% var pagos = 0;%>    
+                                        <% for( var i = 0; i < pagamentos.length; i++ ) { %>
+                                            
+                                            <% for(var e=0; e < condicaoPagamentos.length; e++) {%>
+                                                <% if( condicaoPagamentos[e].id == pagamentos[i].condpagamento) {%>
+                                                    <li><a href="#" data-toggle="modal" data-target="#modal-remove-<%= pagamentos[i].id %>">$<%= pagamentos[i].valor.toFixed(2)   %><span class="pull-right badge bg-yellow"><%= condicaoPagamentos[e].nome %></span></a></li>
+                                                     <!-- Excluir Registro -->
+                                                    <div class="modal modal-danger fade" id="modal-remove-<%= pagamentos[i].id %>">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                    <h4 class="modal-title">Excluir Registro</h4>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <p>Deseja deletar o pagamento?</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a class="btn btn-outline pull-left"  data-dismiss="modal" href="/itens/<%= idVenda %>">
+                                                                        Cancelar
+                                                                    </a>
+                                                                    <a class="btn btn-outline" href="/pagamentoExcluir/<%=  pagamentos[i].id   %>">
+                                                                        Excluir
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.modal-content -->
+                                                        </div>
+                                                        <!-- /.modal-dialog -->
+                                                    </div>
+                                                    
+                                                    <% pagos += pagamentos[i].valor  %>
+                                                <% } %>
+                                            <% } %>
+                                        
+                                        <% } %>
+                                        <li><a>R$ <%= total.toFixed(2) %><span class="pull-right badge bg-red">TOTAL MESA</span></a></li>
+                                        <li><a>R$ <%= ( total - pagos ).toFixed(2) %><span class="pull-right badge bg-green">TOTAL RECEBER</span></a></li>
+                                    
                                     </ul>                  
                                 </div>
                             </div>

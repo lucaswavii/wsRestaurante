@@ -3,9 +3,9 @@ var mysql = require('mysql');
 var connMysql = function() {
 	
 	return mysql.createConnection({
-		host : '18.218.132.80',
+		host : '',
 		user: 'root',
-		password: 'Wa180279',
+		password: '',
 		database: 'wsRestaurante'
 });
 }
